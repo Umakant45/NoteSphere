@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Note Sphere - NEP Notes Portal</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="logo">
+      Note <span>Sphere</span>
+    </div>
+
+    <nav>
+      <a href="#">Home</a>
+      <a href="#semester">Semesters</a>
+      <a href="#features">Features</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <!-- HERO SECTION -->
+  <section class="hero">
+
+    <div class="hero-text">
+      <h1>NEP Notes Portal for Students</h1>
+
+      <p>
+        Welcome to Note Sphere — your one-stop platform for semester-wise
+        NEP notes, study materials, PDFs, and subject resources.
+        Access notes instantly and boost your preparation.
+      </p>
+
+      <button onclick="scrollToSemester()">
+        Explore Notes
+      </button>
+    </div>
+
+    <div class="hero-image">
+      <img src="https://cdn-icons-png.flaticon.com/512/3135/3135755.png" alt="">
+    </div>
+
+  </section>
+
+  <!-- SEMESTER SECTION -->
+  <h1 class="section-title" id="semester">
+    Semester Wise Notes
+  </h1>
+
+  <section class="semester-container">
+
+    <!-- SEM 1 -->
+    <div class="semester-card">
+      <h2>Semester 1</h2>
+
+      <div class="subject">
+        <span>C Programming</span>
+        <button onclick="downloadNote('C Programming')">
+          Notes
+        </button>
+      </div>
+
+      <div class="subject">
+        <span>Computer Network (CN)</span>
+        <button onclick="downloadNote('Computer Network')">
+          Notes
+        </button>
+      </div>
+
+      <div class="subject">
+        <span>Web Technology</span>
+        <button onclick="downloadNote('Web Technology')">
+          Notes
+        </button>
+      </div>
+    </div>
+
+    <!-- SEM 2 -->
+    <div class="semester-card">
+      <h2>Semester 2</h2>
+
+      <div class="subject">
+        <span>C++</span>
+        <button onclick="downloadNote('C++')">
+          Notes
+        </button>
+      </div>
+
+      <div class="subject">
+        <span>DSA</span>
+        <button onclick="downloadNote('DSA')">
+          Notes
+        </button>
+      </div>
+
+      <div class="subject">
+        <span>RDBMS</span>
+        <button onclick="downloadNote('RDBMS')">
+          Notes
+        </button>
+      </div>
+    </div>
+
+    <!-- SEM 3 -->
+    <div class="semester-card">
+      <h2>Semester 3</h2>
+
+      <div class="subject">
+        <span>Python</span>
+        <button onclick="downloadNote('Python')">
+          Notes
+        </button>
+      </div>
+
+      <div class="subject">
+        <span>Java</span>
+        <button onclick="downloadNote('Java')">
+          Notes
+        </button>
+      </div>
+
+      <div class="subject">
+        <span>Software Engineering</span>
+        <button onclick="downloadNote('Software Engineering')">
+          Notes
+        </button>
+      </div>
+    </div>
+
+    <!-- SEM 4 -->
+    <div class="semester-card">
+      <h2>Semester 4</h2>
+
+      <div class="subject">
+        <span>Operating System</span>
+        <button onclick="downloadNote('Operating System')">
+          Notes
+        </button>
+      </div>
+
+      <div class="subject">
+        <span>Software Testing</span>
+        <button onclick="downloadNote('Software Testing')">
+          Notes
+        </button>
+      </div>
+
+      <div class="subject">
+        <span>J2EE</span>
+        <button onclick="downloadNote('J2EE')">
+          Notes
+        </button>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features" id="features">
+
+    <h1 class="section-title">
+      Why Choose Note Sphere?
+    </h1>
+
+    <div class="feature-grid">
+
+      <div class="feature-box">
+        <i class="fas fa-book-open"></i>
+        <h3>Semester Wise Notes</h3>
+        <p>
+          Organized NEP notes for every semester and subject.
+        </p>
+      </div>
+
+      <div class="feature-box">
+        <i class="fas fa-download"></i>
+        <h3>Easy Downloads</h3>
+        <p>
+          Download notes instantly in PDF format anytime.
+        </p>
+      </div>
+
+      <div class="feature-box">
+        <i class="fas fa-mobile-alt"></i>
+        <h3>Responsive Design</h3>
+        <p>
+          Access your notes smoothly on mobile, tablet, and desktop.
+        </p>
+      </div>
+
+      <div class="feature-box">
+        <i class="fas fa-user-graduate"></i>
+        <h3>Student Friendly</h3>
+        <p>
+          Clean UI specially designed for students and study materials.
+        </p>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- FOOTER -->
+  <footer id="contact">
+
+  <p>
+    © 2026 Note Sphere | NEP Student Notes Portal
+  </p>
+
+  <p style="margin-top:10px; font-size:15px; color:#c7d2fe;">
+    Created by <strong>Kautkar Umakant SYBCS-C</strong>
+  </p>
+
+  <div style="margin-top:20px;">
+
+    <a href="https://www.linkedin.com/in/umakant-kautkar-6a0180312/"
+       target="_blank"
+       style="color:white; margin:0 12px; font-size:24px; text-decoration:none;">
+      <i class="fab fa-linkedin"></i>
+    </a>
+
+    <a href="https://github.com/Umakant45"
+       target="_blank"
+       style="color:white; margin:0 12px; font-size:24px; text-decoration:none;">
+      <i class="fab fa-github"></i>
+    </a>
+
+    <a href="https://www.instagram.com/umakant_kautkar/"
+       target="_blank"
+       style="color:white; margin:0 12px; font-size:24px; text-decoration:none;">
+      <i class="fab fa-instagram"></i>
+    </a>
+
+  </div>
+
+</footer>
+ <script src="script.js"></script>
+
+
+</body>
+</html>
