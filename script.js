@@ -47,10 +47,10 @@ function downloadNote(subject){
       4: "pdfs/Software-testing/ST-unit-4.pdf"
     },
     "J2EE": {
-      1: "pdfs/J2EE/J2EE-unit-1.pdf",
-      2: "pdfs/J2EE/J2EE-unit-2.pdf",
-      3: "pdfs/J2EE/J2EE-unit-3.pdf",
-      4: "pdfs/J2EE/J2EE-unit-4.pdf"
+      1: "pdfs/J2EE/j2ee-unit-1.pdf",
+      2: "pdfs/J2EE/J2ee-unit-2.pdf",
+      3: "pdfs/J2EE/J2ee-unit-3.pdf",
+      4: "pdfs/J2EE/J2ee-unit-4.pdf"
     },
     "RDBMS": {
       1: "pdfs/RDBMS/RDBMS-unit-1.pdf",
@@ -63,6 +63,12 @@ function downloadNote(subject){
       2: "pdfs/Web-technology/WT-unit-2.pdf",
       3: "pdfs/Web-technology/WT-unit-3.pdf",
       4: "pdfs/Web-technology/WT-unit-4.pdf"
+    },
+    "C Programming": {
+      1: "pdfs/C-programming/C-unit-1.pdf",
+      2: "pdfs/C-programming/C-unit-2.pdf",
+      3: "pdfs/C-programming/C-unit-3.pdf",
+      4: "pdfs/C-programming/C-unit-4.pdf"
     }
 
   };
