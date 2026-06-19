@@ -105,3 +105,29 @@ function scrollToSemester(){
 
 }
 
+function openPaper(subject) {
+
+    const papers = {
+        c: "pyq/c_paper.pdf",
+        cn: "pyq/cn_paper.pdf",
+        wt: "pyq/webtech_paper.pdf",
+
+        cpp: "pyq/cpp_paper.pdf",
+        dsa: "pyq/dsa_paper.pdf",
+        rdbms: "pyq/rdbms_paper.pdf",
+
+        python: "pyq/python_paper.pdf",
+        java: "pyq/java_paper.pdf",
+        se: "pyq/software_engineering_paper.pdf",
+
+        os: "pyq/os_paper.pdf",
+        st: "pyq/software_testing_paper.pdf",
+        j2ee: "pyq/j2ee_paper.pdf"
+    };
+
+    if (papers[subject]) {
+        window.open(papers[subject], "_blank");
+    } else {
+        alert("Question paper not available");
+    }
+}
