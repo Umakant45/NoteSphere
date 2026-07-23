@@ -69,6 +69,18 @@ function downloadNote(subject){
       2: "pdfs/C-programming/C-unit-2.pdf",
       3: "pdfs/C-programming/C-unit-3.pdf",
       4: "pdfs/C-programming/C-unit-4.pdf"
+    },
+    "Computer Network": {
+      1: "pdfs/Computer-networks/CN-unit-1.pdf",
+      2: "pdfs/Computer-networks/CN-unit-2.pdf",
+      3: "pdfs/Computer-networks/CN-unit-3.pdf",
+      4: "pdfs/Computer-networks/CN-unit-4.pdf"
+    },
+    "DSA": {
+      1: "pdfs/DSA/DSA-unit-1.pdf",
+      2: "pdfs/DSA/DSA-unit-2.pdf",
+      3: "pdfs/DSA/DSA-unit-3.pdf",
+      4: "pdfs/DSA/DSA-unit-4.pdf"
     }
 
   };
