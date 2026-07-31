@@ -143,3 +143,17 @@ function openPaper(subject) {
         alert("Question paper not available");
     }
 }
+function openSyllabus(year) {
+
+  const syllabusFiles = {
+    "1st-year": "pdfs/syllabus/1st-year-syllabus.pdf",
+    "2nd-year": "pdfs/syllabus/2nd-year-syllabus.pdf",
+    "3rd-year": "pdfs/syllabus/3rd-year-syllabus.pdf"
+  };
+
+  if (syllabusFiles[year]) {
+    window.open(syllabusFiles[year], "_blank");
+  } else {
+    alert("Syllabus PDF not found.");
+  }
+}
