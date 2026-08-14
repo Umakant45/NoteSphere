@@ -335,6 +335,23 @@
           Clean UI specially designed for students and study materials.
         </p>
       </div>
+      <div class="feature-box">
+  <i class="fas fa-brain"></i>
+
+  <h3>Question Bank</h3>
+
+  <p>
+    Practice subject-wise questions and test your knowledge
+    with our interactive QBank.
+  </p>
+
+  <button
+    class="qbank-btn"
+    onclick="openQBank()">
+    <i class="fas fa-arrow-up-right-from-square"></i>
+    Open QBank
+  </button>
+</div>
 
     </div>
 
@@ -515,6 +532,59 @@
     </a>
 
   </div>
+ 
+<!-- ================= COMMUNITY CHAT ================= -->
+
+<button id="communityChatBtn" class="community-chat-btn" onclick="openCommunityChat()">
+  <i class="fas fa-comments"></i>
+  <span>Community</span>
+</button>
+
+<div id="communityChat" class="community-chat hidden">
+
+  <div class="community-chat-header">
+    <div>
+      <span class="chat-kicker">NOTESPHERE COMMUNITY</span>
+      <h3>💬 Student Community</h3>
+    </div>
+
+    <button class="chat-close-btn" onclick="closeCommunityChat()">
+      &times;
+    </button>
+  </div>
+
+  <div class="community-chat-body" id="chatMessages">
+
+    <div class="chat-welcome">
+      <i class="fas fa-users"></i>
+      <h4>Welcome to NoteSphere Community</h4>
+      <p>
+        Connect with other students, ask questions and share knowledge.
+      </p>
+    </div>
+
+  </div>
+
+  <div class="community-chat-input">
+
+    <input
+      type="text"
+      id="chatMessageInput"
+      placeholder="Write a message..."
+      maxlength="500"
+      onkeydown="handleChatKey(event)"
+    >
+
+    <button
+    type="button"
+    onclick="sendChatMessage()"
+  >
+    <i class="fas fa-paper-plane"></i>
+  </button>
+
+  </div>
+
+</div>
 
 </footer>
  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>

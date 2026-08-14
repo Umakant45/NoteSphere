@@ -222,9 +222,9 @@
           View and manage registered Note Sphere students.
         </p>
 
-        <button onclick="manageStudents()">
-          Manage Students
-        </button>
+      <button onclick="manageStudents()">
+    Manage Students
+  </button>
 
       </div>
 
@@ -240,11 +240,12 @@
 
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="script.js"></script>
 
-  <script src="supabase-config.js"></script>
+<script>
 
-  <script>
-    async function checkAdminAccess() {
+async function checkAdminAccess() {
 
   if (!noteSphereSupabase) {
     window.location.href = "index.html";
@@ -254,7 +255,7 @@
   const { data, error } =
     await noteSphereSupabase.auth.getSession();
 
-  if (error || !data.session) {
+  if (error || !data?.session) {
     window.location.href = "index.html";
     return;
   }
@@ -266,12 +267,20 @@
       .eq("id", data.session.user.id)
       .maybeSingle();
 
-  if (
-    profileError ||
-    !profile ||
-    profile.role !== "admin" ||
-    profile.status === "banned"
-  ) {
+  if (profileError || !profile) {
+    alert("Unable to verify admin account.");
+    window.location.href = "index.html";
+    return;
+  }
+
+  if (profile.status === "banned") {
+    await noteSphereSupabase.auth.signOut();
+    alert("Your account has been banned.");
+    window.location.href = "index.html";
+    return;
+  }
+
+  if (profile.role !== "admin") {
     alert("Access denied. Admins only.");
     window.location.href = "index.html";
     return;
@@ -282,48 +291,42 @@
 
 checkAdminAccess();
 
-    /*
-      Temporary functions.
-      We will connect these to Supabase
-      in the next steps.
-    */
 
-    function manageNotes() {
-      alert("Notes management coming next.");
-    }
+function manageNotes() {
+  alert("Notes management coming next.");
+}
 
-    function manageSyllabus() {
-      alert("Syllabus management coming next.");
-    }
+function manageSyllabus() {
+  alert("Syllabus management coming next.");
+}
 
-    function managePapers() {
-      alert("Question paper management coming next.");
-    }
+function managePapers() {
+  alert("Question paper management coming next.");
+}
 
-    function manageStudents() {
-      alert("Student management coming next.");
-    }
+function manageStudents() {
+  alert("Student management coming next.");
+}
 
 
-    async function logoutAdmin() {
+async function logoutAdmin() {
 
-      if (!noteSphereSupabase) {
-        window.location.href = "index.html";
-        return;
-      }
+  if (!noteSphereSupabase) {
+    window.location.href = "index.html";
+    return;
+  }
 
-      const { error } =
-        await noteSphereSupabase.auth.signOut();
+  const { error } =
+    await noteSphereSupabase.auth.signOut();
 
-      if (error) {
-        alert("Logout failed: " + error.message);
-        return;
-      }
+  if (error) {
+    alert("Logout failed: " + error.message);
+    return;
+  }
 
-      window.location.href = "index.html";
-    }
+  window.location.href = "index.html";
+}
 
-  </script>
-
+</script>
 </body>
 </html>

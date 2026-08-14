@@ -337,16 +337,21 @@ async function loginStudent(event) {
       return;
     }
 
-    setAuthStatus(
-      "loginStatus",
-      "Login successful!"
-    );
+setAuthStatus(
+  "loginStatus",
+  "Login successful!"
+);
 
-    await refreshAuthUI();
+await refreshAuthUI();
 
-    setTimeout(() => {
-      closeAuthModal();
-    }, 500);
+// IMPORTANT: refresh Community Chat
+await updateChatLoginState();
+
+console.log("Community Chat updated after login");
+
+setTimeout(() => {
+  closeAuthModal();
+}, 500);
 
   } catch (error) {
 
@@ -381,6 +386,7 @@ async function loginStudent(event) {
   userMenu?.classList.add("hidden");
 
   console.log("Logged out successfully");
+  await updateChatLoginState();
 }
 
 
@@ -582,19 +588,29 @@ async function loadAdminStudents() {
           </span>
         </td>
 
-        <td>
-          <button
-            class="admin-action-btn"
-            onclick="toggleStudentBan('${student.id}', '${status}')">
+       <td>
 
-            ${
-              status === "banned"
-                ? "Unban"
-                : "Ban"
-            }
+  ${
+    student.role === "admin"
+      ? `<span class="admin-protected">
+           🔒 Protected
+         </span>`
+      : `
+        <button
+          class="admin-action-btn"
+          onclick="toggleStudentBan('${student.id}', '${status}')">
 
-          </button>
-        </td>
+          ${
+            status === "banned"
+              ? "Unban"
+              : "Ban"
+          }
+
+        </button>
+      `
+  }
+
+</td>
 
       </tr>
     `;
@@ -646,4 +662,481 @@ async function toggleStudentBan(studentId, currentStatus) {
   );
 
   await loadAdminStudents();
+}
+/* ============================================================
+   NOTESPHERE COMMUNITY CHAT
+   ============================================================ */
+
+function openCommunityChat() {
+
+  const chat =
+    document.getElementById("communityChat");
+
+  if (!chat) {
+    console.error("communityChat element not found");
+    return;
+  }
+
+  chat.classList.remove("hidden");
+
+  updateChatLoginState();
+}
+
+
+function closeCommunityChat() {
+
+  const chat = document.getElementById("communityChat");
+
+  if (!chat) return;
+
+  chat.classList.add("hidden");
+}
+
+
+function handleChatKey(event) {
+
+  if (event.key === "Enter") {
+    event.preventDefault();
+    sendChatMessage();
+  }
+
+}
+
+
+async function updateChatLoginState() {
+
+  const inputArea = document.querySelector(".community-chat-input");
+  const messagesArea = document.getElementById("chatMessages");
+
+  if (!inputArea || !messagesArea) {
+    console.error("Community chat elements not found");
+    return;
+  }
+
+  if (!noteSphereSupabase) {
+    showLoggedOutChat();
+    return;
+  }
+
+  const { data, error } =
+    await noteSphereSupabase.auth.getSession();
+
+  if (error) {
+    console.error("Chat session error:", error);
+    showLoggedOutChat();
+    return;
+  }
+
+  const session = data?.session;
+
+  console.log("COMMUNITY CHAT SESSION:", session);
+
+  /* =========================
+     LOGGED OUT
+     ========================= */
+
+  if (!session) {
+
+    messagesArea.innerHTML = `
+      <div class="chat-welcome">
+        <i class="fas fa-lock"></i>
+        <h4>Login Required</h4>
+        <p>Please login to view the Community Chat.</p>
+
+        <button onclick="openAuthModal()">
+          Login
+        </button>
+      </div>
+    `;
+
+    inputArea.innerHTML = `
+      <div class="chat-login-required">
+        🔒 Please login to participate in Community Chat.
+        <button onclick="openAuthModal()">
+          Login
+        </button>
+      </div>
+    `;
+
+    return;
+  }
+
+  /* =========================
+     LOGGED IN
+     ========================= */
+
+  inputArea.innerHTML = `
+    <input
+      type="text"
+      id="chatMessageInput"
+      placeholder="Write a message..."
+      maxlength="500"
+      onkeydown="handleChatKey(event)"
+    >
+
+    <button
+      type="button"
+      onclick="sendChatMessage()"
+    >
+      <i class="fas fa-paper-plane"></i>
+    </button>
+  `;
+
+  console.log("Community Chat: USER LOGGED IN");
+
+  // Load chat history
+  await loadCommunityMessages();
+}
+
+
+/* ============================================================
+   SEND MESSAGE
+   ============================================================ */
+
+async function sendChatMessage() {
+
+  const input =
+    document.getElementById("chatMessageInput");
+
+  if (!input) {
+    alert("Please login to use Community Chat.");
+    return;
+  }
+
+
+  const message =
+    input.value.trim();
+
+
+  if (!message) return;
+
+
+  if (!noteSphereSupabase) {
+
+    alert("Please login to use Community Chat.");
+
+    return;
+  }
+
+
+  /* =========================
+     CHECK SESSION AGAIN
+     ========================= */
+
+  const {
+    data,
+    error
+  } = await noteSphereSupabase.auth.getSession();
+
+
+  if (error) {
+
+    console.error(
+      "Session check failed:",
+      error
+    );
+
+    alert("Unable to verify login.");
+
+    return;
+  }
+
+
+  const session =
+    data?.session;
+
+
+  /* =========================
+     NOT LOGGED IN
+     ========================= */
+
+  if (!session) {
+
+    alert(
+      "Please login to participate in the Community Chat."
+    );
+
+    await updateChatLoginState();
+
+    return;
+  }
+
+
+  console.log(
+    "Sending message as:",
+    session.user.id
+  );
+
+
+  /* =========================
+     INSERT MESSAGE
+     ========================= */
+
+  const {
+    error: insertError
+  } = await noteSphereSupabase
+    .from("community_messages")
+    .insert({
+      user_id: session.user.id,
+      message: message
+    });
+
+
+  if (insertError) {
+
+    console.error(
+      "Community message error:",
+      insertError
+    );
+
+    alert(
+      "Unable to send message: " +
+      insertError.message
+    );
+
+    return;
+  }
+
+
+  input.value = "";
+  await loadCommunityMessages();
+
+  console.log(
+    "Message sent successfully"
+  );
+}
+async function loadCommunityMessages() {
+
+  const messagesArea = document.getElementById("chatMessages");
+
+  if (!messagesArea || !noteSphereSupabase) return;
+
+  // Check login
+  const { data: sessionData } =
+    await noteSphereSupabase.auth.getSession();
+
+  const session = sessionData?.session;
+
+  if (!session) {
+    return;
+  }
+
+  messagesArea.innerHTML = `
+    <div class="chat-loading">
+      Loading messages...
+    </div>
+  `;
+
+  // Get messages
+  const { data: messages, error } =
+    await noteSphereSupabase
+      .from("community_messages")
+      .select(`
+        id,
+        user_id,
+        message,
+        created_at
+      `)
+      .order("created_at", { ascending: true });
+
+  if (error) {
+    console.error("Unable to load community messages:", error);
+
+    messagesArea.innerHTML = `
+      <div class="chat-welcome">
+        <i class="fas fa-exclamation-circle"></i>
+        <h4>Unable to load messages</h4>
+        <p>${error.message}</p>
+      </div>
+    `;
+
+    return;
+  }
+
+  if (!messages || messages.length === 0) {
+
+    messagesArea.innerHTML = `
+      <div class="chat-welcome">
+        <i class="fas fa-users"></i>
+        <h4>Welcome to NoteSphere Community</h4>
+        <p>No messages yet. Start the conversation!</p>
+      </div>
+    `;
+
+    return;
+  }
+
+  // Get unique user IDs
+  const userIds = [
+    ...new Set(messages.map(msg => msg.user_id))
+  ];
+
+  // Get student profiles
+  const { data: profiles, error: profileError } =
+    await noteSphereSupabase
+      .from("profiles")
+      .select("id, full_name, student_id")
+      .in("id", userIds);
+
+  if (profileError) {
+    console.error("Unable to load chat profiles:", profileError);
+  }
+
+  // Create profile lookup
+  const profileMap = {};
+
+  (profiles || []).forEach(profile => {
+    profileMap[profile.id] = profile;
+  });
+
+  messagesArea.innerHTML = messages.map(msg => {
+
+    const profile = profileMap[msg.user_id];
+
+    const userName =
+      profile?.full_name ||
+      profile?.student_id ||
+      "Student";
+
+    const isOwnMessage =
+      msg.user_id === session.user.id;
+      console.log(
+  "Message owner:",
+  msg.user_id,
+  "Logged in user:",
+  session.user.id,
+  "Own:",
+  isOwnMessage
+);
+
+    return `
+      <div class="chat-message ${
+        isOwnMessage ? "own-message" : ""
+      }">
+
+        <div class="chat-message-user">
+          ${escapeChatMessage(userName)}
+        </div>
+
+        <div class="chat-message-text">
+          ${escapeChatMessage(msg.message)}
+        </div>
+
+       <div class="chat-message-time">
+  ${formatChatTime(msg.created_at)}
+</div>
+
+${
+  isOwnMessage
+    ? `
+      <button
+        class="chat-delete-btn"
+        onclick="deleteChatMessage('${msg.id}')">
+        <i class="fas fa-trash"></i> Delete
+      </button>
+    `
+    : ""
+}
+
+      </div>
+    `;
+
+  }).join("");
+
+  messagesArea.scrollTop =
+    messagesArea.scrollHeight;
+}
+function escapeChatMessage(message) {
+
+  const div = document.createElement("div");
+
+  div.textContent = message;
+
+  return div.innerHTML;
+}
+
+
+function formatChatTime(timestamp) {
+
+  if (!timestamp) return "";
+
+  return new Date(timestamp).toLocaleString([], {
+    dateStyle: "short",
+    timeStyle: "short"
+  });
+}
+document.addEventListener("DOMContentLoaded", async () => {
+  await refreshAuthUI();
+  await updateChatLoginState();
+  startCommunityRealtime();
+});
+function startCommunityRealtime() {
+
+  if (!noteSphereSupabase) return;
+
+  noteSphereSupabase
+    .channel("community-chat")
+    .on(
+      "postgres_changes",
+      {
+        event: "INSERT",
+        schema: "public",
+        table: "community_messages"
+      },
+      async () => {
+
+        console.log("New community message received");
+
+        // Only reload if user is logged in
+        const { data } =
+          await noteSphereSupabase.auth.getSession();
+
+        if (!data?.session) return;
+
+        await loadCommunityMessages();
+      }
+    )
+    .subscribe((status) => {
+
+      console.log(
+        "Community realtime status:",
+        status
+      );
+
+    });
+}
+async function deleteChatMessage(messageId) {
+
+  if (!noteSphereSupabase) return;
+
+  const { data } = await noteSphereSupabase.auth.getSession();
+
+  if (!data?.session) {
+    alert("Please login first.");
+    return;
+  }
+
+  const confirmDelete = confirm("Delete this message?");
+
+  if (!confirmDelete) return;
+
+  const { error } = await noteSphereSupabase
+    .from("community_messages")
+    .delete()
+    .eq("id", messageId)
+    .eq("user_id", data.session.user.id);
+
+  if (error) {
+    console.error("Delete message error:", error);
+    alert("Unable to delete message: " + error.message);
+    return;
+  }
+
+  await loadCommunityMessages();
+}
+function openQBank() {
+  window.open(
+    "https://placementqbank.netlify.app/",
+    "_blank"
+  );
 }
