@@ -157,3 +157,493 @@ function openSyllabus(year) {
     alert("Syllabus PDF not found.");
   }
 }
+/* ============================================================
+   NoteSphere Phase 2 - Student Authentication
+   ============================================================ */
+
+const NOTESPHERE_AUTH_DOMAIN = "@notesphere.local";
+
+function authEmailFromStudentId(studentId) {
+  return `${studentId.trim().toLowerCase()}${NOTESPHERE_AUTH_DOMAIN}`;
+}
+function openAuthModal() {
+    const modal = document.getElementById("authModal");
+
+    if (!modal) {
+        console.error("NoteSphere: authModal not found");
+        return;
+    }
+
+    console.log("Opening login modal");
+
+    modal.classList.add("auth-open");
+
+    const loginPanel = document.getElementById("loginPanel");
+    const registerPanel = document.getElementById("registerPanel");
+
+    if (loginPanel) {
+        loginPanel.classList.remove("hidden");
+    }
+
+    if (registerPanel) {
+        registerPanel.classList.add("hidden");
+    }
+
+    const input = document.getElementById("loginStudentId");
+
+    if (input) {
+        setTimeout(function () {
+            input.focus();
+        }, 100);
+    }
+}
+
+
+function closeAuthModal() {
+    const modal = document.getElementById("authModal");
+
+    if (!modal) return;
+
+    console.log("Closing login modal");
+
+    modal.classList.remove("auth-open");
+}
+
+function showRegisterPanel() {
+  document.getElementById("loginPanel")?.classList.add("hidden");
+  document.getElementById("registerPanel")?.classList.remove("hidden");
+}
+
+function showLoginPanel() {
+  document.getElementById("registerPanel")?.classList.add("hidden");
+  document.getElementById("loginPanel")?.classList.remove("hidden");
+}
+
+function setAuthStatus(id, message) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = message;
+}
+
+async function registerStudent(event) {
+  event.preventDefault();
+  if (!noteSphereSupabase) {
+    setAuthStatus("registerStatus", "Supabase is not configured.");
+    return;
+  }
+
+  const studentId = document.getElementById("registerStudentId").value.trim();
+  const fullName = document.getElementById("registerName").value.trim();
+  const year = document.getElementById("registerYear").value;
+  const course = document.getElementById("registerCourse").value.trim();
+  const password = document.getElementById("registerPassword").value;
+
+  if (!studentId || !fullName || !year || !course || password.length < 6) {
+    setAuthStatus("registerStatus", "Please fill all fields correctly.");
+    return;
+  }
+
+  setAuthStatus("registerStatus", "Creating account...");
+
+  const { data, error } = await noteSphereSupabase.auth.signUp({
+    email: authEmailFromStudentId(studentId),
+    password,
+    options: { data: { student_id: studentId, full_name: fullName, year, course } }
+  });
+
+  if (error) {
+    setAuthStatus("registerStatus", error.message);
+    return;
+  }
+
+  if (data.session) {
+    setAuthStatus("registerStatus", "Account created successfully.");
+    setTimeout(closeAuthModal, 700);
+  } else {
+    setAuthStatus(
+      "registerStatus",
+      "Account created, but email confirmation is required. Disable Confirm email in Supabase for this Student-ID-only development login."
+    );
+  }
+}
+async function loginStudent(event) {
+  event.preventDefault();
+
+  if (!noteSphereSupabase) {
+    setAuthStatus("loginStatus", "Supabase is not configured.");
+    return;
+  }
+
+  const studentId = document
+    .getElementById("loginStudentId")
+    .value
+    .trim();
+
+  const password = document
+    .getElementById("loginPassword")
+    .value;
+
+  if (!studentId || !password) {
+    setAuthStatus("loginStatus", "Enter Student ID and password.");
+    return;
+  }
+
+  setAuthStatus("loginStatus", "Signing in...");
+
+  console.log("Student ID:", studentId);
+  console.log(
+    "Auth email:",
+    authEmailFromStudentId(studentId)
+  );
+
+  try {
+
+    const loginPromise =
+      noteSphereSupabase.auth.signInWithPassword({
+        email: authEmailFromStudentId(studentId),
+        password: password
+      });
+
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => {
+        reject(
+          new Error(
+            "Login request timed out. Check your Supabase connection."
+          )
+        );
+      }, 10000);
+    });
+
+    const { data, error } = await Promise.race([
+      loginPromise,
+      timeoutPromise
+    ]);
+
+    console.log("Login response:", data);
+    console.log("Login error:", error);
+
+    if (error) {
+      setAuthStatus(
+        "loginStatus",
+        error.message
+      );
+      return;
+    }
+
+    if (!data || !data.session) {
+      setAuthStatus(
+        "loginStatus",
+        "Login succeeded but no session was created."
+      );
+      return;
+    }
+
+    setAuthStatus(
+      "loginStatus",
+      "Login successful!"
+    );
+
+    await refreshAuthUI();
+
+    setTimeout(() => {
+      closeAuthModal();
+    }, 500);
+
+  } catch (error) {
+
+    console.error("Login exception:", error);
+
+    setAuthStatus(
+      "loginStatus",
+      error.message || "Login failed."
+    );
+  }
+}async function logoutStudent() {
+  if (!noteSphereSupabase) {
+    console.error("Supabase is not configured.");
+    return;
+  }
+
+  const { error } = await noteSphereSupabase.auth.signOut();
+
+  if (error) {
+    console.error("Logout error:", error);
+    alert("Logout failed: " + error.message);
+    return;
+  }
+
+  // Immediately update the UI
+  const loginBtn = document.getElementById("openAuthBtn");
+  const userBtn = document.getElementById("userNavBtn");
+  const userMenu = document.getElementById("userMenu");
+
+  loginBtn?.classList.remove("hidden");
+  userBtn?.classList.add("hidden");
+  userMenu?.classList.add("hidden");
+
+  console.log("Logged out successfully");
+}
+
+
+function toggleUserMenu() {
+  document.getElementById("userMenu")?.classList.toggle("hidden");
+}
+
+async function refreshAuthUI() {
+  if (!noteSphereSupabase) return;
+
+  const { data } = await noteSphereSupabase.auth.getSession();
+  const session = data?.session;
+
+  const loginBtn = document.getElementById("openAuthBtn");
+  const userBtn = document.getElementById("userNavBtn");
+  const userMenu = document.getElementById("userMenu");
+  const userLabel = document.getElementById("loggedInStudent");
+  const adminBtn = document.getElementById("adminPanelBtn");
+
+  if (!session) {
+    loginBtn?.classList.remove("hidden");
+    userBtn?.classList.add("hidden");
+    userMenu?.classList.add("hidden");
+    adminBtn?.classList.add("hidden");
+
+    if (userLabel) {
+      userLabel.textContent = "";
+    }
+
+    return;
+  }
+
+  loginBtn?.classList.add("hidden");
+  userBtn?.classList.remove("hidden");
+
+  const { data: profile, error } = await noteSphereSupabase
+    .from("profiles")
+    .select("student_id, full_name, role, status")
+    .eq("id", session.user.id)
+    .maybeSingle();
+
+  if (error) {
+    console.error("Profile error:", error);
+    return;
+  }
+
+  if (profile?.status === "banned") {
+    await noteSphereSupabase.auth.signOut();
+    alert("This account has been banned from NoteSphere.");
+    return;
+  }
+
+  if (profile && userLabel) {
+    userLabel.textContent =
+      `${profile.full_name} • ${profile.student_id}`;
+  }
+
+  // Show Admin Panel only to admins
+  if (profile?.role === "admin") {
+    adminBtn?.classList.remove("hidden");
+  } else {
+    adminBtn?.classList.add("hidden");
+  }
+}
+function openAdminPanel() {
+  if (!noteSphereSupabase) return;
+
+  window.location.href = "admin.html";
+}
+/* ============================================================
+   NOTESPHERE LOGIN MODAL
+   ============================================================ */
+
+function openAdminPanel() {
+  const adminPanel = document.getElementById("adminPanel");
+
+  if (!adminPanel) {
+    console.error("Admin panel not found.");
+    return;
+  }
+
+  adminPanel.classList.remove("hidden");
+
+  adminPanel.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+
+  loadAdminStudents();
+}
+
+
+function closeAdminPanel() {
+  const adminPanel = document.getElementById("adminPanel");
+
+  if (!adminPanel) return;
+
+  adminPanel.classList.add("hidden");
+}
+
+
+async function loadAdminStudents() {
+
+  const table = document.getElementById("adminStudentTable");
+
+  if (!table) return;
+
+  table.innerHTML = `
+    <tr>
+      <td colspan="7" class="admin-loading">
+        Loading students...
+      </td>
+    </tr>
+  `;
+
+  if (!noteSphereSupabase) {
+    table.innerHTML = `
+      <tr>
+        <td colspan="7" class="admin-loading">
+          Supabase is not configured.
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  const { data: students, error } = await noteSphereSupabase
+    .from("profiles")
+    .select("id, student_id, full_name, year, course, role, status")
+    .order("full_name");
+
+  if (error) {
+    console.error("Admin student loading error:", error);
+
+    table.innerHTML = `
+      <tr>
+        <td colspan="7" class="admin-loading">
+          Unable to load students.
+        </td>
+      </tr>
+    `;
+
+    return;
+  }
+
+  const total = students?.length || 0;
+
+  const banned = students
+    ? students.filter(student => student.status === "banned").length
+    : 0;
+
+  const active = total - banned;
+
+  document.getElementById("totalStudents").textContent = total;
+  document.getElementById("activeStudents").textContent = active;
+  document.getElementById("bannedStudents").textContent = banned;
+
+  if (!students || students.length === 0) {
+
+    table.innerHTML = `
+      <tr>
+        <td colspan="7" class="admin-loading">
+          No students found.
+        </td>
+      </tr>
+    `;
+
+    return;
+  }
+
+  table.innerHTML = students.map(student => {
+
+    const status = student.status || "active";
+
+    return `
+      <tr>
+
+        <td>${student.student_id || "-"}</td>
+
+        <td>${student.full_name || "-"}</td>
+
+        <td>${student.year || "-"}</td>
+
+        <td>${student.course || "-"}</td>
+
+        <td>
+          <span class="admin-role">
+            ${student.role || "student"}
+          </span>
+        </td>
+
+        <td>
+          <span class="${
+            status === "banned"
+              ? "admin-status-banned"
+              : "admin-status-active"
+          }">
+            ${status}
+          </span>
+        </td>
+
+        <td>
+          <button
+            class="admin-action-btn"
+            onclick="toggleStudentBan('${student.id}', '${status}')">
+
+            ${
+              status === "banned"
+                ? "Unban"
+                : "Ban"
+            }
+
+          </button>
+        </td>
+
+      </tr>
+    `;
+
+  }).join("");
+}
+async function toggleStudentBan(studentId, currentStatus) {
+
+  if (!noteSphereSupabase) {
+    alert("Supabase is not configured.");
+    return;
+  }
+
+  console.log("BAN BUTTON CLICKED");
+  console.log("Student ID:", studentId);
+  console.log("Current status:", currentStatus);
+
+  const newStatus =
+    currentStatus === "banned"
+      ? "active"
+      : "banned";
+
+  console.log("New status:", newStatus);
+
+  const { data, error } = await noteSphereSupabase
+    .from("profiles")
+    .update({ status: newStatus })
+    .eq("id", studentId)
+    .select("id, student_id, status");
+
+  console.log("Ban update data:", data);
+  console.log("Ban update error:", error);
+
+  if (error) {
+    console.error("Status update error:", error);
+    alert("Ban failed: " + error.message);
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    alert("No student was updated. Check your Supabase RLS policy.");
+    return;
+  }
+
+  alert(
+    newStatus === "banned"
+      ? "Student banned successfully."
+      : "Student unbanned successfully."
+  );
+
+  await loadAdminStudents();
+}

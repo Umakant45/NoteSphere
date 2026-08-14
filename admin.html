@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Note Sphere - Admin Panel</title>
+
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    .admin-page {
+      min-height: calc(100vh - 68px);
+      padding: 60px 6%;
+    }
+
+    .admin-header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+
+    .admin-header h1 {
+      font-family: var(--font-head);
+      color: var(--white);
+      font-size: clamp(2rem, 4vw, 3rem);
+      margin-bottom: 10px;
+    }
+
+    .admin-header p {
+      color: var(--muted);
+    }
+
+    .admin-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 24px;
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    .admin-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 35px 25px;
+      text-align: center;
+      transition: 0.28s;
+    }
+
+    .admin-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(108,99,255,.35);
+      box-shadow: 0 20px 50px rgba(0,0,0,.4);
+    }
+
+    .admin-card i {
+      font-size: 2.4rem;
+      margin-bottom: 20px;
+      background: linear-gradient(
+        135deg,
+        var(--accent),
+        var(--accent2)
+      );
+
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .admin-card h2 {
+      font-family: var(--font-head);
+      color: var(--white);
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+    }
+
+    .admin-card p {
+      color: var(--muted);
+      font-size: .9rem;
+      margin-bottom: 22px;
+    }
+
+    .admin-card button {
+      border: 0;
+      border-radius: 50px;
+      padding: 10px 20px;
+      background: linear-gradient(
+        135deg,
+        var(--accent),
+        #8b80ff
+      );
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .admin-card button:hover {
+      transform: translateY(-2px);
+    }
+
+    .admin-back {
+      display: block;
+      width: fit-content;
+      margin: 45px auto 0;
+      color: var(--muted);
+      text-decoration: none;
+    }
+
+    .admin-back:hover {
+      color: var(--white);
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header>
+
+    <div class="logo">
+      Note <span>Sphere</span>
+    </div>
+
+    <nav>
+      <a href="index.html">Home</a>
+
+      <button
+        type="button"
+        class="user-nav-btn"
+        onclick="logoutAdmin()">
+        Logout
+      </button>
+    </nav>
+
+  </header>
+
+
+  <!-- ADMIN PAGE -->
+  <main class="admin-page">
+
+    <div class="admin-header">
+
+      <span class="auth-kicker">
+        NOTESPHERE ADMINISTRATION
+      </span>
+
+      <h1>Admin Dashboard</h1>
+
+      <p>
+        Manage Note Sphere resources and student accounts.
+      </p>
+
+    </div>
+
+
+    <div class="admin-grid">
+
+      <!-- NOTES -->
+      <div class="admin-card">
+
+        <i class="fas fa-book"></i>
+
+        <h2>Manage Notes</h2>
+
+        <p>
+          Add, update, and remove semester-wise unit notes.
+        </p>
+
+        <button onclick="manageNotes()">
+          Manage Notes
+        </button>
+
+      </div>
+
+
+      <!-- SYLLABUS -->
+      <div class="admin-card">
+
+        <i class="fas fa-file-lines"></i>
+
+        <h2>Manage Syllabus</h2>
+
+        <p>
+          Manage 1st, 2nd, and 3rd year syllabus PDFs.
+        </p>
+
+        <button onclick="manageSyllabus()">
+          Manage Syllabus
+        </button>
+
+      </div>
+
+
+      <!-- QUESTION PAPERS -->
+      <div class="admin-card">
+
+        <i class="fas fa-file-circle-question"></i>
+
+        <h2>Question Papers</h2>
+
+        <p>
+          Add and manage previous year question papers.
+        </p>
+
+        <button onclick="managePapers()">
+          Manage Papers
+        </button>
+
+      </div>
+
+
+      <!-- STUDENTS -->
+      <div class="admin-card">
+
+        <i class="fas fa-user-graduate"></i>
+
+        <h2>Students</h2>
+
+        <p>
+          View and manage registered Note Sphere students.
+        </p>
+
+        <button onclick="manageStudents()">
+          Manage Students
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <a href="index.html" class="admin-back">
+      <i class="fas fa-arrow-left"></i>
+      Back to Note Sphere
+    </a>
+
+  </main>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script src="supabase-config.js"></script>
+
+  <script>
+    async function checkAdminAccess() {
+
+  if (!noteSphereSupabase) {
+    window.location.href = "index.html";
+    return;
+  }
+
+  const { data, error } =
+    await noteSphereSupabase.auth.getSession();
+
+  if (error || !data.session) {
+    window.location.href = "index.html";
+    return;
+  }
+
+  const { data: profile, error: profileError } =
+    await noteSphereSupabase
+      .from("profiles")
+      .select("role, status")
+      .eq("id", data.session.user.id)
+      .maybeSingle();
+
+  if (
+    profileError ||
+    !profile ||
+    profile.role !== "admin" ||
+    profile.status === "banned"
+  ) {
+    alert("Access denied. Admins only.");
+    window.location.href = "index.html";
+    return;
+  }
+
+  console.log("Admin access verified.");
+}
+
+checkAdminAccess();
+
+    /*
+      Temporary functions.
+      We will connect these to Supabase
+      in the next steps.
+    */
+
+    function manageNotes() {
+      alert("Notes management coming next.");
+    }
+
+    function manageSyllabus() {
+      alert("Syllabus management coming next.");
+    }
+
+    function managePapers() {
+      alert("Question paper management coming next.");
+    }
+
+    function manageStudents() {
+      alert("Student management coming next.");
+    }
+
+
+    async function logoutAdmin() {
+
+      if (!noteSphereSupabase) {
+        window.location.href = "index.html";
+        return;
+      }
+
+      const { error } =
+        await noteSphereSupabase.auth.signOut();
+
+      if (error) {
+        alert("Logout failed: " + error.message);
+        return;
+      }
+
+      window.location.href = "index.html";
+    }
+
+  </script>
+
+</body>
+</html>
