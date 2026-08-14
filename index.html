@@ -1,596 +1,176 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Note Sphere - NEP Notes Portal</title>
-
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
-
-  <link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Programming QBank — Training & Placement Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="qbank.css">
 </head>
-
 <body>
 
-  <!-- HEADER -->
-  <header>
-    <div class="logo">
-      Note <span>Sphere</span>
+<!-- ==================== LOGIN PAGE ==================== -->
+<div id="page-login" class="page active">
+  <div class="login-wrap">
+    <div class="login-brand fade-up">
+      <div class="login-brand-logo">
+        <div class="logo-icon">📚</div>
+        QBank
+      </div>
+      <p>Training &amp; Placement Portal · SYBCS C</p>
     </div>
-
-    <nav>
-      <a href="#">Home</a>
-      <a href="#semester">Semesters</a>
-      <a href="#syllabus">Syllabus</a>
-      <a href="#question-papers">Question Papers</a>
-      <a href="#features">Features</a>
-      <a href="#contact">Contact</a>
-      <button type="button" class="auth-nav-btn" id="openAuthBtn" onclick="openAuthModal()">
-  Login
-</button>
-      <button type="button" class="user-nav-btn hidden" id="userNavBtn" onclick="toggleUserMenu()">Account</button>
-      <div class="user-menu hidden" id="userMenu">
-  <span id="loggedInStudent"></span>
-
-  <button
-    id="adminPanelBtn"
-    class="hidden"
-    onclick="openAdminPanel()">
-    ⚙ Admin Panel
-  </button>
-
-  <button onclick="logoutStudent()">
-    Logout
-  </button>
-</div>
-    </nav>
-  </header>
-
-  <!-- HERO SECTION -->
-  <section class="hero">
-
-    <div class="hero-text">
-      <h1>NEP Notes Portal for Students</h1>
-
-      <p>
-        Welcome to Note Sphere — your one-stop platform for semester-wise
-        NEP notes, study materials, PDFs, and subject resources.
-        Access notes instantly and boost your preparation.
-      </p>
-
-      <button onclick="scrollToSemester()">
-        Explore Notes
-      </button>
-    </div>
-
-    <div class="hero-image">
-      <img src="https://cdn-icons-png.flaticon.com/512/3135/3135755.png" alt="">
-    </div>
-
-  </section>
-
-  <!-- SEMESTER SECTION -->
-  <h1 class="section-title" id="semester">
-    Semester Wise Notes
-  </h1>
-
-  <section class="semester-container">
-
-    <!-- SEM 1 -->
-    <div class="semester-card">
-      <h2>Semester 1</h2>
-
-      <div class="subject">
-        <span>C Programming</span>
-        <button onclick="downloadNote('C Programming')">
-          Notes
-        </button>
-      </div>
-
-      <div class="subject">
-        <span>Computer Network (CN)</span>
-        <button onclick="downloadNote('Computer Network')">
-          Notes
-        </button>
-      </div>
-
-      <div class="subject">
-        <span>Web Technology</span>
-        <button onclick="downloadNote('Web Technology')">
-          Notes
-        </button>
-      </div>
-    </div>
-
-    <!-- SEM 2 -->
-    <div class="semester-card">
-      <h2>Semester 2</h2>
-
-      <div class="subject">
-        <span>C++</span>
-        <button onclick="downloadNote('C++')">
-          Notes
-        </button>
-      </div>
-
-      <div class="subject">
-        <span>DSA</span>
-        <button onclick="downloadNote('DSA')">
-          Notes
-        </button>
-      </div>
-
-      <div class="subject">
-        <span>RDBMS</span>
-        <button onclick="downloadNote('RDBMS')">
-          Notes
-        </button>
-      </div>
-    </div>
-
-    <!-- SEM 3 -->
-    <div class="semester-card">
-      <h2>Semester 3</h2>
-
-      <div class="subject">
-        <span>Python</span>
-        <button onclick="downloadNote('Python')">
-          Notes
-        </button>
-      </div>
-
-      <div class="subject">
-        <span>Java</span>
-        <button onclick="downloadNote('Java')">
-          Notes
-        </button>
-      </div>
-
-      <div class="subject">
-        <span>Software Engineering</span>
-        <button onclick="downloadNote('Software Engineering')">
-          Notes
-        </button>
-      </div>
-    </div>
-
-    <!-- SEM 4 -->
-    <div class="semester-card">
-      <h2>Semester 4</h2>
-
-      <div class="subject">
-        <span>Operating System</span>
-        <button onclick="downloadNote('Operating System')">
-          Notes
-        </button>
-      </div>
-
-      <div class="subject">
-        <span>Software Testing</span>
-        <button onclick="downloadNote('Software Testing')">
-          Notes
-        </button>
-      </div>
-
-      <div class="subject">
-        <span>J2EE</span>
-        <button onclick="downloadNote('J2EE')">
-          Notes
-        </button>
-      </div>
-    </div>
-
-  </section>
-  <!-- SYLLABUS SECTION -->
-<h1 class="section-title" id="syllabus">
-  Year Wise Syllabus
-</h1>
-
-<section class="semester-container">
-
-  <!-- 1ST YEAR -->
-  <div class="semester-card">
-    <h2>1st Year</h2>
-
-    <div class="subject">
-      <span>1st Year NEP Syllabus</span>
-      <button onclick="openSyllabus('1st-year')">
-        View Syllabus
-      </button>
-    </div>
-  </div>
-
-  <!-- 2ND YEAR -->
-  <div class="semester-card">
-    <h2>2nd Year</h2>
-
-    <div class="subject">
-      <span>2nd Year NEP Syllabus</span>
-      <button onclick="openSyllabus('2nd-year')">
-        View Syllabus
-      </button>
-    </div>
-  </div>
-
-  <!-- 3RD YEAR -->
-  <div class="semester-card">
-    <h2>3rd Year</h2>
-
-    <div class="subject">
-      <span>3rd Year NEP Syllabus</span>
-      <button onclick="openSyllabus('3rd-year')">
-        View Syllabus
-      </button>
-    </div>
-  </div>
-
-</section>
-  <h1 class="section-title" id="question-papers">
-    Previous Year Question Papers
-</h1>
-
-<section class="semester-container">
-
-    <div class="semester-card">
-        <h2>Question Papers</h2>
-  <div class="subject">
-    <span>C Programming</span>
-    <button onclick="openPaper('c')">View Paper</button>
-</div>
-
-<div class="subject">
-    <span>Computer Network</span>
-    <button onclick="openPaper('cn')">View Paper</button>
-</div>
-
-<div class="subject">
-    <span>Web Technology</span>
-    <button onclick="openPaper('wt')">View Paper</button>
-</div>
-
-<div class="subject">
-    <span>C++</span>
-    <button onclick="openPaper('cpp')">View Paper</button>
-</div>
-
-<div class="subject">
-    <span>DSA</span>
-    <button onclick="openPaper('dsa')">View Paper</button>
-</div>
-
-<div class="subject">
-    <span>RDBMS</span>
-    <button onclick="openPaper('rdbms')">View Paper</button>
-</div>
-
-<div class="subject">
-    <span>Python</span>
-    <button onclick="openPaper('python')">View Paper</button>
-</div>
-
-<div class="subject">
-    <span>Java</span>
-    <button onclick="openPaper('java')">View Paper</button>
-</div>
-
-<div class="subject">
-    <span>Software Engineering</span>
-    <button onclick="openPaper('se')">View Paper</button>
-</div>
-
-<div class="subject">
-    <span>Operating System</span>
-    <button onclick="openPaper('os')">View Paper</button>
-</div>
-
-<div class="subject">
-    <span>Software Testing</span>
-    <button onclick="openPaper('st')">View Paper</button>
-</div>
-
-<div class="subject">
-    <span>J2EE</span>
-    <button onclick="openPaper('j2ee')">View Paper</button>
-</div>
-</div>
-</section>
-
-  <!-- FEATURES -->
-  <section class="features" id="features">
-
-    <h1 class="section-title">
-      Why Choose Note Sphere?
-    </h1>
-
-    <div class="feature-grid">
-
-      <div class="feature-box">
-        <i class="fas fa-book-open"></i>
-        <h3>Semester Wise Notes</h3>
-        <p>
-          Organized NEP notes for every semester and subject.
-        </p>
-      </div>
-
-      <div class="feature-box">
-        <i class="fas fa-download"></i>
-        <h3>Easy Downloads</h3>
-        <p>
-          Download notes instantly in PDF format anytime.
-        </p>
-      </div>
-
-      <div class="feature-box">
-        <i class="fas fa-mobile-alt"></i>
-        <h3>Responsive Design</h3>
-        <p>
-          Access your notes smoothly on mobile, tablet, and desktop.
-        </p>
-      </div>
-
-      <div class="feature-box">
-        <i class="fas fa-user-graduate"></i>
-        <h3>Student Friendly</h3>
-        <p>
-          Clean UI specially designed for students and study materials.
-        </p>
-      </div>
-      <div class="feature-box">
-  <i class="fas fa-brain"></i>
-
-  <h3>Question Bank</h3>
-
-  <p>
-    Practice subject-wise questions and test your knowledge
-    with our interactive QBank.
-  </p>
-
-  <button
-    class="qbank-btn"
-    onclick="openQBank()">
-    <i class="fas fa-arrow-up-right-from-square"></i>
-    Open QBank
-  </button>
-</div>
-
-    </div>
-
-  </section>
-
-
-  <div class="auth-overlay" id="authModal">
-    <div class="auth-modal">
-      <button type="button" class="auth-close" onclick="closeAuthModal()">&times;</button>
-
-      <div id="loginPanel">
-        <span class="auth-kicker">NOTESPHERE COMMUNITY</span>
-        <h2>Student Login</h2>
-        <p class="auth-subtitle">Sign in with your Student ID.</p>
-        <form onsubmit="loginStudent(event)">
-          <label>Student ID</label>
-          <input id="loginStudentId" type="text" placeholder="Enter Student ID" required>
-          <label>Password</label>
-          <input id="loginPassword" type="password" placeholder="Enter password" required>
-          <button class="auth-submit" type="submit">Login</button>
-          <p class="auth-status" id="loginStatus"></p>
-        </form>
-        <p class="auth-switch">New student?
-          <button type="button" onclick="showRegisterPanel()">Create an account</button>
-        </p>
-      </div>
-
-      <div id="registerPanel" class="hidden">
-        <span class="auth-kicker">JOIN NOTESPHERE</span>
-        <h2>Create Student Account</h2>
-        <p class="auth-subtitle">Create your account for the student community.</p>
-        <form onsubmit="registerStudent(event)">
-          <label>Student ID</label>
-          <input id="registerStudentId" type="text" placeholder="Enter Student ID" required>
-          <label>Full Name</label>
-          <input id="registerName" type="text" placeholder="Enter full name" required>
-          <div class="auth-row">
-            <div>
-              <label>Year</label>
-              <select id="registerYear" required>
-                <option value="">Select year</option>
-                <option>1st Year</option><option>2nd Year</option>
-                <option>3rd Year</option><option>4th Year</option>
-              </select>
-            </div>
-            <div>
-              <label>Course</label>
-              <input id="registerCourse" type="text" value="BCS" required>
-            </div>
-          </div>
-          <label>Password</label>
-          <input id="registerPassword" type="password" minlength="6" placeholder="Minimum 6 characters" required>
-          <button class="auth-submit" type="submit">Create Account</button>
-          <p class="auth-status" id="registerStatus"></p>
-        </form>
-        <p class="auth-switch">Already registered?
-          <button type="button" onclick="showLoginPanel()">Back to login</button>
-        </p>
-      </div>
-    </div>
-  </div>
-  <!-- ================= ADMIN PANEL ================= -->
-<section id="adminPanel" class="admin-panel hidden">
-
-  <div class="admin-header">
-    <div>
-      <span class="auth-kicker">NOTESPHERE ADMIN</span>
-      <h1>Admin Dashboard</h1>
-      <p>Manage NoteSphere student accounts.</p>
-    </div>
-
-    <button onclick="closeAdminPanel()" class="admin-close-btn">
-      ✕ Close
-    </button>
-  </div>
-
-  <!-- STAT CARDS -->
-  <div class="admin-stats">
-
-    <div class="admin-stat-card">
-      <i class="fas fa-users"></i>
-      <div>
-        <span>Total Students</span>
-        <strong id="totalStudents">0</strong>
-      </div>
-    </div>
-
-    <div class="admin-stat-card">
-      <i class="fas fa-user-check"></i>
-      <div>
-        <span>Active Students</span>
-        <strong id="activeStudents">0</strong>
-      </div>
-    </div>
-
-    <div class="admin-stat-card">
-      <i class="fas fa-user-slash"></i>
-      <div>
-        <span>Banned Students</span>
-        <strong id="bannedStudents">0</strong>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- STUDENT TABLE -->
-  <div class="admin-table-card">
-
-    <div class="admin-table-header">
-      <h2>Student Management</h2>
-
-      <button onclick="loadAdminStudents()" class="admin-refresh-btn">
-        <i class="fas fa-rotate"></i> Refresh
-      </button>
-    </div>
-
-    <div class="admin-table-wrapper">
-
-      <table class="admin-table">
-
-        <thead>
-          <tr>
-            <th>Student ID</th>
-            <th>Name</th>
-            <th>Year</th>
-            <th>Course</th>
-            <th>Role</th>
-            <th>Status</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-
-        <tbody id="adminStudentTable">
-          <tr>
-            <td colspan="7" class="admin-loading">
-              Loading students...
-            </td>
-          </tr>
-        </tbody>
-
-      </table>
-
-    </div>
-
-  </div>
-
-</section>
-
-  <!-- FOOTER -->
-  <footer id="contact">
-
-  <p>
-    © 2026 Note Sphere | NEP Student Notes Portal
-  </p>
-
-  <p style="margin-top:10px; font-size:15px; color:#c7d2fe;">
-    Created by <strong>Kautkar Umakant SYBCS-C</strong>
-  </p>
-
-  <div style="margin-top:20px;">
-
-    <a href="https://www.linkedin.com/in/umakant-kautkar-6a0180312/"
-       target="_blank"
-       style="color:white; margin:0 12px; font-size:24px; text-decoration:none;">
-      <i class="fab fa-linkedin"></i>
-    </a>
-
-    <a href="https://github.com/Umakant45"
-       target="_blank"
-       style="color:white; margin:0 12px; font-size:24px; text-decoration:none;">
-      <i class="fab fa-github"></i>
-    </a>
-
-    <a href="https://www.instagram.com/umakant_kautkar/"
-       target="_blank"
-       style="color:white; margin:0 12px; font-size:24px; text-decoration:none;">
-      <i class="fab fa-instagram"></i>
-    </a>
-
-  </div>
- 
-<!-- ================= COMMUNITY CHAT ================= -->
-
-<button id="communityChatBtn" class="community-chat-btn" onclick="openCommunityChat()">
-  <i class="fas fa-comments"></i>
-  <span>Community</span>
-</button>
-
-<div id="communityChat" class="community-chat hidden">
-
-  <div class="community-chat-header">
-    <div>
-      <span class="chat-kicker">NOTESPHERE COMMUNITY</span>
-      <h3>💬 Student Community</h3>
-    </div>
-
-    <button class="chat-close-btn" onclick="closeCommunityChat()">
-      &times;
-    </button>
-  </div>
-
-  <div class="community-chat-body" id="chatMessages">
-
-    <div class="chat-welcome">
-      <i class="fas fa-users"></i>
-      <h4>Welcome to NoteSphere Community</h4>
-      <p>
-        Connect with other students, ask questions and share knowledge.
-      </p>
-    </div>
-
-  </div>
-
-  <div class="community-chat-input">
-
+    <div class="login-card fade-up-1">
+  <h2>Welcome back 👋</h2>
+  <p class="sub">Enter your details to start practising interview & exam questions</p>
+
+  <div class="lfield">
+    <label>Your Name</label>
     <input
       type="text"
-      id="chatMessageInput"
-      placeholder="Write a message..."
-      maxlength="500"
-      onkeydown="handleChatKey(event)"
+      id="inp-name"
+      placeholder="e.g. Umakant Kautkar"
+      autocomplete="name"
     >
+  </div>
 
-    <button
-    type="button"
-    onclick="sendChatMessage()"
-  >
-    <i class="fas fa-paper-plane"></i>
+  <div class="lfield">
+    <label>Email Address</label>
+    <input
+      type="email"
+      id="inp-email"
+      placeholder="e.g. uma@college.edu"
+      autocomplete="email"
+    >
+  </div>
+
+  <button class="btn-login" id="login-btn" type="button">
+    Get Started →
   </button>
+</div>
+    <div class="login-stats fade-up-2">
+      <div class="lstat">
+        <div class="lstat-num">8</div>
+        <div class="lstat-lbl">Subjects</div>
+      </div>
+      <div class="lstat">
+        <div class="lstat-num" id="total-q-count">—</div>
+        <div class="lstat-lbl">Questions</div>
+      </div>
+      <div class="lstat">
+        <div class="lstat-num">∞</div>
+        <div class="lstat-lbl">Practice</div>
+      </div>
+    </div>
+    <div class="login-footer fade-up-3">Created by <strong style="color:var(--tx2)">Umakant Kautkar</strong></div>
+  </div>
+</div>
 
+<!-- ==================== MAIN PAGE ==================== -->
+<div id="page-main" class="page">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <span class="topbar-logo">📚 QBank</span>
+    <span class="topbar-center" id="topbar-center">Training &amp; Placement</span>
+    <button class="profile-btn" id="profile-btn" title="Your profile">?</button>
+  </div>
+
+  <!-- SUBJECTS VIEW -->
+  <div id="view-subjects" class="main-body">
+    <div class="view-header fade-up">
+      <div class="view-title">Choose a Subject</div>
+      <div class="view-sub">Select a topic to practise interview and exam questions</div>
+    </div>
+    <div class="subjects-grid" id="subjects-grid"></div>
+    <div class="footer">Created by <strong>Umakant Kautkar</strong> · SYBCS B</div>
+  </div>
+
+  <!-- QUESTIONS VIEW -->
+  <div id="view-questions" class="main-body" style="display:none">
+    <div class="q-toprow">
+      <button class="back-btn" id="back-btn">← Subjects</button>
+      <span class="q-subject-name" id="q-subj-name"></span>
+      <span class="q-badge-counter" id="q-counter">Q 1 / 1</span>
+    </div>
+    <div class="q-stats">
+      <div class="stat-card">
+        <div class="stat-num" id="st-total">0</div>
+        <div class="stat-lbl">Total Qs</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num green" id="st-done">0</div>
+        <div class="stat-lbl">Marked Done</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num pink" id="st-cur">1</div>
+        <div class="stat-lbl">Current</div>
+      </div>
+    </div>
+    <div class="q-pbar-wrap">
+      <div class="q-pbar-top">
+        <span id="pbar-label">Progress</span>
+        <span id="pbar-pct">0%</span>
+      </div>
+      <div class="q-pbar"><div class="q-pbar-fill" id="q-pbar-fill" style="width:0%"></div></div>
+    </div>
+    <div class="q-card" id="q-card">
+      <div class="q-card-meta">
+        <span class="q-num-pill" id="q-num-pill">Q1</span>
+        <span class="diff-badge" id="q-diff-badge">easy</span>
+      </div>
+      <div class="q-card-title" id="q-title"></div>
+      <div class="q-card-content" id="q-content"></div>
+    </div>
+    <div class="solved-dots" id="solved-dots"></div>
+    <div class="q-controls" style="margin-top:1.1rem">
+      <button class="btn" id="prev-btn">← Prev</button>
+      <button class="btn btn-primary" id="next-btn">Next →</button>
+      <button class="btn btn-random" id="rand-btn">🎲 Random</button>
+      <button class="btn btn-success" id="done-btn">✓ Mark Done</button>
+      <span class="toast" id="done-toast">✓ Saved!</span>
+    </div>
+    <div class="footer">Created by <strong>Umakant Kautkar</strong> · SYBCS B</div>
   </div>
 
 </div>
 
-</footer>
- <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
- <script src="supabase-config.js"></script>
- <script src="script.js"></script>
+<!-- ==================== PROFILE OVERLAY ==================== -->
+<div id="overlay" class="overlay" style="display:none" onclick="closeProfileOnBg(event)">
+  <div class="profile-panel" id="profile-panel">
+    <div class="pp-head">
+      <h2>Your Profile</h2>
+      <button class="close-btn" id="close-profile">✕</button>
+    </div>
+    <div class="pp-body">
+      <div class="avatar-row">
+        <div class="avatar" id="pp-avatar">U</div>
+        <div class="avatar-info">
+          <div class="av-name" id="pp-name">—</div>
+          <div class="av-email" id="pp-email">—</div>
+        </div>
+      </div>
+      <div class="pp-stats">
+        <div class="pp-stat">
+          <div class="pp-stat-num" id="pp-total">0</div>
+          <div class="pp-stat-lbl">Questions done</div>
+        </div>
+        <div class="pp-stat">
+          <div class="pp-stat-num" id="pp-subjects">0</div>
+          <div class="pp-stat-lbl">Subjects tried</div>
+        </div>
+      </div>
+      <div class="pp-section-title">By subject</div>
+      <div class="subj-breakdown" id="pp-breakdown"></div>
+      <div class="pp-section-title">Recent activity</div>
+      <div id="pp-progress"></div>
+      <button class="logout-btn" id="logout-btn">Log out</button>
+    </div>
+  </div>
+</div>
 
+<script src="qbank.js"></script>
 
 </body>
 </html>
+

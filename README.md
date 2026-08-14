@@ -1,150 +1,61 @@
-# NoteSphere
+# QBank
 
-NoteSphere is a student-friendly notes sharing and downloading platform designed to help 
-NEP students access semester-wise and subject-wise study materials easily.
+QBank is a computer science question bank website designed for students to practice technical interview questions and programming concepts.
 
-The website provides organized notes, unit-wise PDFs, and a clean responsive interface for desktop and mobile users.
+## Features
 
----
+- Multiple subjects support
+- Java, JavaScript, Python, SQL and more
+- Interactive question navigation
+- Progress tracking
+- Clean and responsive UI
+- JSON-based question storage
+- Easy to expand with new subjects and questions
 
-# Features
+## Technologies Used
 
-* Semester-wise Notes Organization
-* Subject-wise PDF Access
-* Unit-wise PDF Downloads
-* Responsive User Interface
-* Fast and Simple Navigation
-* Mobile Friendly Design
-* Download Notes Instantly
-* Clean Modern UI
+- HTML
+- CSS
+- JavaScript
+- JSON
 
----
-
-# Technologies Used
-
-## Frontend
-
-* HTML
-* CSS
-* JavaScript
-
----
-
-# Project Structure
+## Project Structure
 
 ```bash
-notesphere/
+Qbank/
 │
-├── index.html
+├── qbank.html
 ├── style.css
 ├── script.js
-├── notes/
-│   ├── java/
-│   ├── python/
-│   ├── dbms/
-│   └── other-subjects/
-│
-├── assets/
-│   ├── images/
-│   └── icons/
-│
+├── data/
+│   ├── java.json
+│   ├── javascript.json
+│   ├── python.json
+│   └── ...
 └── README.md
 ```
 
----
+## How to Run
 
-# Website Features
-
-## Semester Selection
-
-Students can select their semester and access relevant subjects.
-
-## Subject Access
-
-Each semester contains multiple subjects with organized study materials.
-
-## Unit-wise Notes Download
-
-Students can download notes according to units:
-
-* Unit 1
-* Unit 2
-* Unit 3
-* Unit 4
-
----
-
-# How to Run the Project
-
-## Clone Repository
+1. Download or clone the repository
 
 ```bash
-git clone https://github.com/Umakant45/notesphere.git
+git clone https://github.com/Umakant45/Qbank.git
 ```
 
-## Open Project Folder
+2. Open the project folder
 
-```bash
-cd notesphere
-```
+3. Run `qbank.html` in your browser
 
-## Run Website
+## Future Improvements
 
-Simply open:
+- Login system
+- Difficulty filters
+- Timed quizzes
+- Leaderboard
+- Backend database integration
+- Dark mode
 
-```txt
-index.html
-```
-
-in your browser.
-
----
-
-# Deployment
-
-You can deploy this project easily using:
-
-* Netlify
-* Vercel
-* GitHub Pages
-
----
-
-# GitHub Push Commands
-
-```bash
-git init
-git add .
-git commit -m "Initial commit"
-git branch -M main
-git remote add origin https://github.com/Umakant45/notesphere.git
-git push -u origin main
-```
-
----
-
-# Future Improvements
-
-* Login System
-* Upload Notes Feature
-* Search Bar
-* Dark Mode
-* Notes Preview
-* PDF Viewer
-* Student Dashboard
-* AI Notes Recommendation
-* Favorites Section
-
----
-
-# Author
+## Author
 
 Umakant Kautkar
-
-Linkedin: https://www.linkedin.com/in/umakant-kautkar-6a0180312/
-
----
-
-# License
-
-This project is open-source and created for educational purposes.

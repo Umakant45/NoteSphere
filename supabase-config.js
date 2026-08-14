@@ -1,17 +1,7 @@
-// NoteSphere Supabase configuration - Phase 2
-// Browser-safe publishable key only. Never use sb_secret_ or service_role here.
+const SUPABASE_URL = "YOUR_NOTESPHERE_SUPABASE_URL";
+const SUPABASE_ANON_KEY = "YOUR_NOTESPHERE_SUPABASE_ANON_KEY";
 
-const NOTESPHERE_SUPABASE_URL = "https://cwkrlurwgvzrefraktqf.supabase.co";
-const NOTESPHERE_SUPABASE_KEY = "sb_publishable_DU-L521ZLe9XsUFkJd6pJQ_mHDehUdn";
-
-let noteSphereSupabase = null;
-
-if (window.supabase) {
-  noteSphereSupabase = window.supabase.createClient(
-    NOTESPHERE_SUPABASE_URL,
-    NOTESPHERE_SUPABASE_KEY
-  );
-  console.log("NoteSphere: Supabase client initialized.");
-} else {
-  console.error("NoteSphere: Supabase JS library did not load.");
-}
+const noteSphereSupabase = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY
+);
