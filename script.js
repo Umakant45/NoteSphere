@@ -8,115 +8,81 @@
    NOTES DOWNLOADS
    ============================================================ */
 
-function downloadNote(subject) {
+async function downloadNote(subject) {
 
-    let unit = prompt("Enter Unit Number");
+    const unit = prompt("Enter Unit Number (1-4)");
 
     if (unit === null) {
         return;
     }
 
-    unit = unit.trim();
+    const selectedUnit = unit.trim();
 
-    const notes = {
+    if (!["1", "2", "3", "4"].includes(selectedUnit)) {
+        alert("Please enter a valid unit number: 1, 2, 3, or 4.");
+        return;
+    }
 
-        "Java": {
-            1: "pdfs/java/java-unit-1.pdf",
-            2: "pdfs/java/java-unit-2.pdf",
-            3: "pdfs/java/java-unit-3.pdf",
-            4: "pdfs/java/java-unit-4.pdf"
-        },
+    if (!window.noteSphereSupabase) {
+        alert("Supabase is not configured.");
+        return;
+    }
 
-        "Python": {
-            1: "pdfs/python/python-unit-1.pdf",
-            2: "pdfs/python/python-unit-2.pdf",
-            3: "pdfs/python/python-unit-3.pdf",
-            4: "pdfs/python/python-unit-4.pdf"
-        },
+    try {
 
-        "C++": {
-            1: "pdfs/cpp/cpp-unit-1.pdf",
-            2: "pdfs/cpp/cpp-unit-2.pdf",
-            3: "pdfs/cpp/cpp-unit-3.pdf",
-            4: "pdfs/cpp/cpp-unit-4.pdf"
-        },
+        const { data, error } =
+            await noteSphereSupabase
+                .from("notes")
+                .select("title, file_url")
+                .eq("subject", subject)
+                .eq("unit", Number(selectedUnit))
+                .maybeSingle();
 
-        "Software Engineering": {
-            1: "pdfs/Software-engineering/SE-unit-1.pdf",
-            2: "pdfs/Software-engineering/SE-unit-2.pdf",
-            3: "pdfs/Software-engineering/SE-unit-3.pdf",
-            4: "pdfs/Software-engineering/SE-unit-4.pdf"
-        },
+        if (error) {
 
-        "Operating System": {
-            1: "pdfs/Operating-system/OS-unit-1.pdf",
-            2: "pdfs/Operating-system/OS-unit-2.pdf",
-            3: "pdfs/Operating-system/OS-unit-3.pdf",
-            4: "pdfs/Operating-system/OS-unit-4.pdf"
-        },
+            console.error("Notes error:", error);
 
-        "Software Testing": {
-            1: "pdfs/Software-testing/ST-unit-1.pdf",
-            2: "pdfs/Software-testing/ST-unit-2.pdf",
-            3: "pdfs/Software-testing/ST-unit-3.pdf",
-            4: "pdfs/Software-testing/ST-unit-4.pdf"
-        },
+            alert(
+                "Unable to load note: " +
+                error.message
+            );
 
-        "J2EE": {
-            1: "pdfs/J2EE/j2ee-unit-1.pdf",
-            2: "pdfs/J2EE/J2ee-unit-2.pdf",
-            3: "pdfs/J2EE/J2ee-unit-3.pdf",
-            4: "pdfs/J2EE/J2ee-unit-4.pdf"
-        },
-
-        "RDBMS": {
-            1: "pdfs/RDBMS/RDBMS-unit-1.pdf",
-            2: "pdfs/RDBMS/RDBMS-unit-2.pdf",
-            3: "pdfs/RDBMS/RDBMS-unit-3.pdf",
-            4: "pdfs/RDBMS/RDBMS-unit-4.pdf"
-        },
-
-        "Web Technology": {
-            1: "pdfs/Web-technology/WT-unit-1.pdf",
-            2: "pdfs/Web-technology/WT-unit-2.pdf",
-            3: "pdfs/Web-technology/WT-unit-3.pdf",
-            4: "pdfs/Web-technology/WT-unit-4.pdf"
-        },
-
-        "C Programming": {
-            1: "pdfs/C-programming/C-unit-1.pdf",
-            2: "pdfs/C-programming/C-unit-2.pdf",
-            3: "pdfs/C-programming/C-unit-3.pdf",
-            4: "pdfs/C-programming/C-unit-4.pdf"
-        },
-
-        "Computer Network": {
-            1: "pdfs/Computer-Networks/CN-unit-1.pdf",
-            2: "pdfs/Computer-Networks/CN-unit-2.pdf",
-            3: "pdfs/Computer-Networks/CN-unit-3.pdf",
-            4: "pdfs/Computer-Networks/CN-unit-4.pdf"
-        },
-
-        "DSA": {
-            1: "pdfs/DSA/DSA-unit-1.pdf",
-            2: "pdfs/DSA/DSA-unit-2.pdf",
-            3: "pdfs/DSA/DSA-unit-3.pdf",
-            4: "pdfs/DSA/DSA-unit-4.pdf"
+            return;
         }
 
-    };
+        if (!data) {
 
-    if (notes[subject] && notes[subject][unit]) {
+            alert(
+                `Notes not available for ${subject} - Unit ${selectedUnit}.`
+            );
+
+            return;
+        }
+
+        if (!data.file_url) {
+
+            alert(
+                "The note exists, but its PDF URL is missing."
+            );
+
+            return;
+        }
 
         window.open(
-            notes[subject][unit],
+            data.file_url,
             "_blank"
         );
 
-    } else {
+    } catch (error) {
 
-        alert("Notes not available for this unit!");
+        console.error(
+            "Download note error:",
+            error
+        );
 
+        alert(
+            "Unable to open note."
+        );
     }
 }
 

@@ -2157,3 +2157,298 @@ footer a:hover {
         grid-template-columns: 1fr;
     }
 }
+/* ============================================================
+   COMMUNITY CHAT - LOGIN REQUIRED STATE
+   ============================================================ */
+
+.chat-login-required {
+    width: 100%;
+    min-height: 58px;
+    padding: 12px 14px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+
+    color: #a9a4b8;
+    font-size: 13px;
+    line-height: 1.4;
+
+    box-sizing: border-box;
+}
+
+.chat-login-required i {
+    color: #a855f7;
+    font-size: 15px;
+}
+
+.chat-login-required button,
+.chat-login-btn {
+    border: none;
+    outline: none;
+    cursor: pointer;
+
+    padding: 9px 16px;
+
+    border-radius: 10px;
+
+    background: linear-gradient(
+        135deg,
+        #a855f7,
+        #ec4899
+    );
+
+    color: #ffffff;
+
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        opacity 0.2s ease;
+
+    box-shadow:
+        0 6px 20px rgba(168, 85, 247, 0.22);
+}
+
+.chat-login-required button:hover,
+.chat-login-btn:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 10px 28px rgba(168, 85, 247, 0.35);
+}
+
+.chat-login-required button:active,
+.chat-login-btn:active {
+    transform: translateY(0);
+}
+
+
+/* Login Required message inside chat */
+
+.chat-welcome {
+    width: 100%;
+    min-height: 230px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+
+    padding: 30px 20px;
+
+    box-sizing: border-box;
+}
+
+.chat-welcome-icon {
+    width: 52px;
+    height: 52px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 16px;
+
+    border-radius: 16px;
+
+    background: rgba(168, 85, 247, 0.10);
+    border: 1px solid rgba(168, 85, 247, 0.20);
+
+    color: #a855f7;
+
+    font-size: 20px;
+
+    box-shadow:
+        0 0 30px rgba(168, 85, 247, 0.10);
+}
+
+.chat-welcome h4 {
+    margin: 0 0 8px;
+
+    color: #ffffff;
+
+    font-family: "Syne", sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.chat-welcome p {
+    max-width: 280px;
+
+    margin: 0 0 18px;
+
+    color: #918ca0;
+
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.chat-welcome .chat-login-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+
+/* Mobile */
+
+@media (max-width: 600px) {
+    .chat-login-required {
+        flex-direction: column;
+        gap: 9px;
+        text-align: center;
+        padding: 14px;
+    }
+
+    .chat-login-required button {
+        width: 100%;
+        max-width: 140px;
+    }
+
+    .chat-welcome {
+        min-height: 210px;
+        padding: 24px 16px;
+    }
+}
+.notes-admin-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, .75);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 9999;
+}
+
+.notes-admin-modal {
+    width: min(520px, 100%);
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 30px;
+    position: relative;
+    box-shadow: 0 25px 80px rgba(0, 0, 0, .5);
+}
+
+.notes-admin-close {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    width: 36px;
+    height: 36px;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(255,255,255,.08);
+    color: var(--muted);
+    cursor: pointer;
+}
+
+.notes-admin-close:hover {
+    color: var(--white);
+    background: rgba(255,255,255,.15);
+}
+
+.notes-admin-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 28px;
+}
+
+.notes-admin-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 15px;
+    display: grid;
+    place-items: center;
+    background: rgba(108,99,255,.12);
+    color: var(--accent);
+    font-size: 1.4rem;
+}
+
+.notes-admin-header h2 {
+    margin: 0 0 5px;
+    color: var(--white);
+    font-family: var(--font-head);
+}
+
+.notes-admin-header p {
+    margin: 0;
+    color: var(--muted);
+    font-size: .9rem;
+}
+
+.notes-admin-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.notes-admin-form label {
+    color: var(--white);
+    font-size: .9rem;
+    font-weight: 600;
+    margin-top: 8px;
+}
+
+.notes-admin-form select,
+.notes-admin-form input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,.04);
+    color: var(--white);
+    outline: none;
+}
+
+.notes-admin-form select:focus,
+.notes-admin-form input:focus {
+    border-color: var(--accent);
+}
+
+.notes-admin-form option {
+    background: #151525;
+    color: white;
+}
+
+.notes-upload-status {
+    min-height: 22px;
+    margin-top: 10px;
+    color: var(--muted);
+    font-size: .9rem;
+}
+
+.notes-upload-btn {
+    margin-top: 10px;
+    border: 0;
+    border-radius: 50px;
+    padding: 13px 20px;
+    background: linear-gradient(
+        135deg,
+        var(--accent),
+        #8b80ff
+    );
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.notes-upload-btn:hover {
+    transform: translateY(-2px);
+}
