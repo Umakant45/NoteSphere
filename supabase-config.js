@@ -1,7 +1,16 @@
-const SUPABASE_URL = "YOUR_NOTESPHERE_SUPABASE_URL";
-const SUPABASE_ANON_KEY = "YOUR_NOTESPHERE_SUPABASE_ANON_KEY";
+const SUPABASE_URL = "https://cwkrlurwgvzrefraktqf.supabase.co";
 
-const noteSphereSupabase = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_ANON_KEY
-);
+const SUPABASE_ANON_KEY =
+    "sb_publishable_DU-L521ZLe9XsUFkJd6pJQ_mHDehUdn";
+
+if (!window.supabase) {
+    console.error("Supabase library did not load.");
+} else {
+
+    window.noteSphereSupabase = window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY
+    );
+
+    console.log("NoteSphere Supabase initialized successfully.");
+}
