@@ -475,8 +475,429 @@ function getStoragePathFromUrl(fileUrl) {
     }
 }
 
-function manageSyllabus() {
-  alert("Syllabus management coming next.");
+async function manageSyllabus() {
+
+    document.getElementById("syllabusAdminModal")?.remove();
+
+    const modal = document.createElement("div");
+    modal.id = "syllabusAdminModal";
+
+    modal.innerHTML = `
+        <div class="notes-admin-overlay">
+
+            <div class="notes-admin-modal">
+
+                <button
+                    type="button"
+                    class="notes-admin-close"
+                    onclick="closeSyllabusAdmin()">
+                    <i class="fas fa-times"></i>
+                </button>
+
+                <div class="notes-admin-header">
+
+                    <div class="notes-admin-icon">
+                        <i class="fas fa-file-lines"></i>
+                    </div>
+
+                    <div>
+                        <h2>Manage Syllabus</h2>
+                        <p>Upload or replace year-wise syllabus.</p>
+                    </div>
+
+                </div>
+
+                <form
+                    id="syllabusUploadForm"
+                    class="notes-admin-form">
+
+                    <label>
+                        Year
+                    </label>
+
+                    <select
+                        id="adminSyllabusYear"
+                        required>
+
+                        <option value="">
+                            Select Year
+                        </option>
+
+                        <option value="1st-year">
+                            1st Year
+                        </option>
+
+                        <option value="2nd-year">
+                            2nd Year
+                        </option>
+
+                        <option value="3rd-year">
+                            3rd Year
+                        </option>
+
+                    </select>
+
+
+                    <label>
+                        Syllabus Title
+                    </label>
+
+                    <input
+                        type="text"
+                        id="adminSyllabusTitle"
+                        placeholder="Example: BCS 1st Year Syllabus"
+                        maxlength="150"
+                        required
+                    >
+
+
+                    <label>
+                        PDF File
+                    </label>
+
+                    <input
+                        type="file"
+                        id="adminSyllabusFile"
+                        accept=".pdf,application/pdf"
+                        required
+                    >
+
+
+                    <div
+                        id="syllabusUploadStatus"
+                        class="notes-upload-status">
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        class="notes-upload-btn">
+
+                        <i class="fas fa-cloud-arrow-up"></i>
+
+                        Upload Syllabus
+
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    document
+        .getElementById("syllabusUploadForm")
+        .addEventListener(
+            "submit",
+            uploadAdminSyllabus
+        );
+}
+function closeSyllabusAdmin() {
+
+    document
+        .getElementById("syllabusAdminModal")
+        ?.remove();
+
+}
+function getSyllabusStoragePathFromUrl(fileUrl) {
+
+    if (!fileUrl) {
+        return null;
+    }
+
+    try {
+
+        const marker =
+            "/storage/v1/object/public/syllabus/";
+
+        const index =
+            fileUrl.indexOf(marker);
+
+        if (index === -1) {
+            return null;
+        }
+
+        return decodeURIComponent(
+            fileUrl.substring(
+                index + marker.length
+            )
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Unable to extract syllabus storage path:",
+            error
+        );
+
+        return null;
+    }
+}
+
+
+async function uploadAdminSyllabus(event) {
+
+    event.preventDefault();
+
+    const year =
+        document
+            .getElementById("adminSyllabusYear")
+            .value;
+
+    const title =
+        document
+            .getElementById("adminSyllabusTitle")
+            .value
+            .trim();
+
+    const file =
+        document
+            .getElementById("adminSyllabusFile")
+            .files[0];
+
+    const status =
+        document
+            .getElementById("syllabusUploadStatus");
+
+
+    if (!year || !title || !file) {
+
+        status.textContent =
+            "Please fill all fields.";
+
+        return;
+    }
+
+
+    if (
+        file.type !== "application/pdf" &&
+        !file.name.toLowerCase().endsWith(".pdf")
+    ) {
+
+        status.textContent =
+            "Only PDF files are allowed.";
+
+        return;
+    }
+
+
+    if (!window.noteSphereSupabase) {
+
+        status.textContent =
+            "Supabase is not configured.";
+
+        return;
+    }
+
+
+    try {
+
+        status.textContent =
+            "Checking existing syllabus...";
+
+
+        const {
+            data: existingSyllabus,
+            error: findError
+        } =
+            await noteSphereSupabase
+                .from("syllabus")
+                .select("id, file_url")
+                .eq("year", year)
+                .maybeSingle();
+
+
+        if (findError) {
+            throw findError;
+        }
+
+
+        const filePath =
+            `${year}/syllabus-${Date.now()}.pdf`;
+
+
+        status.textContent =
+            "Uploading PDF...";
+
+
+        const {
+            error: uploadError
+        } =
+            await noteSphereSupabase
+                .storage
+                .from("syllabus")
+                .upload(
+                    filePath,
+                    file,
+                    {
+                        contentType:
+                            "application/pdf",
+
+                        cacheControl:
+                            "3600",
+
+                        upsert:
+                            false
+                    }
+                );
+
+
+        if (uploadError) {
+            throw uploadError;
+        }
+
+
+        const {
+            data: publicUrlData
+        } =
+            noteSphereSupabase
+                .storage
+                .from("syllabus")
+                .getPublicUrl(
+                    filePath
+                );
+
+
+        const fileUrl =
+            publicUrlData?.publicUrl;
+
+
+        if (!fileUrl) {
+
+            await noteSphereSupabase
+                .storage
+                .from("syllabus")
+                .remove([
+                    filePath
+                ]);
+
+            throw new Error(
+                "Could not generate syllabus URL."
+            );
+        }
+
+
+        status.textContent =
+            "Saving syllabus information...";
+
+
+        if (existingSyllabus) {
+
+            const {
+                error: updateError
+            } =
+                await noteSphereSupabase
+                    .from("syllabus")
+                    .update({
+
+                        title: title,
+
+                        file_url: fileUrl
+
+                    })
+                    .eq(
+                        "id",
+                        existingSyllabus.id
+                    );
+
+
+            if (updateError) {
+
+                await noteSphereSupabase
+                    .storage
+                    .from("syllabus")
+                    .remove([
+                        filePath
+                    ]);
+
+                throw updateError;
+            }
+
+
+            // Delete old PDF
+            if (existingSyllabus.file_url) {
+
+                const oldPath =
+                    getSyllabusStoragePathFromUrl(
+                        existingSyllabus.file_url
+                    );
+
+                if (oldPath) {
+
+                    await noteSphereSupabase
+                        .storage
+                        .from("syllabus")
+                        .remove([
+                            oldPath
+                        ]);
+
+                }
+
+            }
+
+
+            status.textContent =
+                "✓ Syllabus replaced successfully!";
+
+
+        } else {
+
+            const {
+                error: insertError
+            } =
+                await noteSphereSupabase
+                    .from("syllabus")
+                    .insert({
+
+                        year: year,
+
+                        title: title,
+
+                        file_url: fileUrl
+
+                    });
+
+
+            if (insertError) {
+
+                await noteSphereSupabase
+                    .storage
+                    .from("syllabus")
+                    .remove([
+                        filePath
+                    ]);
+
+                throw insertError;
+            }
+
+
+            status.textContent =
+                "✓ Syllabus uploaded successfully!";
+
+        }
+
+
+        document
+            .getElementById("syllabusUploadForm")
+            .reset();
+
+
+    } catch (error) {
+
+        console.error(
+            "Syllabus upload error:",
+            error
+        );
+
+        status.textContent =
+            "Upload failed: " +
+            error.message;
+
+    }
+
 }
 
 function managePapers() {
