@@ -899,9 +899,325 @@ async function uploadAdminSyllabus(event) {
     }
 
 }
+async function managePapers() {
 
-function managePapers() {
-  alert("Question paper management coming next.");
+    document.getElementById("papersAdminModal")?.remove();
+
+    const modal = document.createElement("div");
+    modal.id = "papersAdminModal";
+
+    modal.innerHTML = `
+        <div class="notes-admin-overlay">
+
+            <div class="notes-admin-modal">
+
+                <button
+                    type="button"
+                    class="notes-admin-close"
+                    onclick="closePapersAdmin()">
+                    <i class="fas fa-times"></i>
+                </button>
+
+                <div class="notes-admin-header">
+
+                    <div class="notes-admin-icon">
+                        <i class="fas fa-file-circle-question"></i>
+                    </div>
+
+                    <div>
+                        <h2>Manage Question Papers</h2>
+                        <p>Upload or replace previous year question papers.</p>
+                    </div>
+
+                </div>
+
+                <form
+                    id="papersUploadForm"
+                    class="notes-admin-form">
+
+                    <label>
+                        Subject
+                    </label>
+
+                    <select
+                        id="adminPaperSubject"
+                        required>
+
+                        <option value="">
+                            Select Subject
+                        </option>
+
+                        <option value="C Programming">C Programming</option>
+                        <option value="Computer Network">Computer Network</option>
+                        <option value="Web Technology">Web Technology</option>
+                        <option value="C++">C++</option>
+                        <option value="DSA">DSA</option>
+                        <option value="RDBMS">RDBMS</option>
+                        <option value="Python">Python</option>
+                        <option value="Java">Java</option>
+                        <option value="Software Engineering">Software Engineering</option>
+                        <option value="Operating System">Operating System</option>
+                        <option value="Software Testing">Software Testing</option>
+                        <option value="J2EE">J2EE</option>
+
+                    </select>
+
+
+                    <label>
+                        Paper Title
+                    </label>
+
+                    <input
+                        type="text"
+                        id="adminPaperTitle"
+                        placeholder="Example: Java Previous Year Question Paper"
+                        maxlength="150"
+                        required
+                    >
+
+
+                    <label>
+                        PDF File
+                    </label>
+
+                    <input
+                        type="file"
+                        id="adminPaperFile"
+                        accept=".pdf,application/pdf"
+                        required
+                    >
+
+
+                    <div
+                        id="papersUploadStatus"
+                        class="notes-upload-status">
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        class="notes-upload-btn">
+
+                        <i class="fas fa-cloud-arrow-up"></i>
+
+                        Upload Paper
+
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    document
+        .getElementById("papersUploadForm")
+        .addEventListener(
+            "submit",
+            uploadAdminPaper
+        );
+}
+function closePapersAdmin() {
+
+    document
+        .getElementById("papersAdminModal")
+        ?.remove();
+
+}
+async function uploadAdminPaper(event) {
+
+    event.preventDefault();
+
+    const subject =
+        document
+            .getElementById("adminPaperSubject")
+            .value
+            .trim();
+
+    const title =
+        document
+            .getElementById("adminPaperTitle")
+            .value
+            .trim();
+
+    const file =
+        document
+            .getElementById("adminPaperFile")
+            .files[0];
+
+    const status =
+        document
+            .getElementById("papersUploadStatus");
+
+
+    if (!subject || !title || !file) {
+
+        status.textContent =
+            "Please fill all fields.";
+
+        return;
+    }
+
+
+    if (
+        file.type !== "application/pdf" &&
+        !file.name.toLowerCase().endsWith(".pdf")
+    ) {
+
+        status.textContent =
+            "Only PDF files are allowed.";
+
+        return;
+    }
+
+
+    if (!window.noteSphereSupabase) {
+
+        status.textContent =
+            "Supabase is not configured.";
+
+        return;
+    }
+
+
+    try {
+
+        status.textContent =
+            "Uploading PDF...";
+
+
+        const safeSubject =
+            subject
+                .toLowerCase()
+                .replace(
+                    /[^a-z0-9]+/g,
+                    "-"
+                )
+                .replace(
+                    /^-|-$/g,
+                    ""
+                );
+
+
+        const filePath =
+            `${safeSubject}/paper-${Date.now()}.pdf`;
+
+
+        const {
+            error: uploadError
+        } =
+            await noteSphereSupabase
+                .storage
+                .from("papers")
+                .upload(
+                    filePath,
+                    file,
+                    {
+                        contentType:
+                            "application/pdf",
+
+                        cacheControl:
+                            "3600",
+
+                        upsert:
+                            false
+                    }
+                );
+
+
+        if (uploadError) {
+            throw uploadError;
+        }
+
+
+        const {
+            data: publicUrlData
+        } =
+            noteSphereSupabase
+                .storage
+                .from("papers")
+                .getPublicUrl(
+                    filePath
+                );
+
+
+        const fileUrl =
+            publicUrlData?.publicUrl;
+
+
+        if (!fileUrl) {
+
+            await noteSphereSupabase
+                .storage
+                .from("papers")
+                .remove([
+                    filePath
+                ]);
+
+            throw new Error(
+                "Could not generate PDF URL."
+            );
+        }
+
+
+        status.textContent =
+            "Saving paper information...";
+
+
+        const {
+            error: insertError
+        } =
+            await noteSphereSupabase
+                .from("papers")
+                .insert({
+
+                    subject: subject,
+
+                    title: title,
+
+                    file_url: fileUrl
+
+                });
+
+
+        if (insertError) {
+
+            await noteSphereSupabase
+                .storage
+                .from("papers")
+                .remove([
+                    filePath
+                ]);
+
+            throw insertError;
+        }
+
+
+        status.textContent =
+            "✓ Question paper uploaded successfully!";
+
+
+        document
+            .getElementById("papersUploadForm")
+            .reset();
+
+
+    } catch (error) {
+
+        console.error(
+            "Paper upload error:",
+            error
+        );
+
+        status.textContent =
+            "Upload failed: " +
+            error.message;
+
+    }
+
 }
 
 function manageStudents() {
