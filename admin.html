@@ -111,6 +111,649 @@
     .admin-back:hover {
       color: var(--white);
     }
+    /* =========================================================
+   MANAGE STUDENTS
+========================================================= */
+
+.students-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.78);
+    backdrop-filter: blur(6px);
+    z-index: 99999;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 25px;
+}
+
+
+.students-modal {
+    width: min(1250px, 100%);
+    max-height: 92vh;
+
+    background: #151515;
+    border: 1px solid rgba(255,255,255,0.10);
+    border-radius: 18px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 25px 80px rgba(0,0,0,0.55);
+
+    color: #fff;
+
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* HEADER */
+
+.students-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 25px 28px;
+
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+
+.students-modal-header h2 {
+    margin: 0;
+
+    font-size: 25px;
+}
+
+
+.students-modal-header h2 i {
+    margin-right: 8px;
+}
+
+
+.students-modal-header p {
+    margin: 7px 0 0;
+
+    color: #aaa;
+    font-size: 14px;
+}
+
+
+.students-close-btn {
+    width: 40px;
+    height: 40px;
+
+    border: none;
+    border-radius: 10px;
+
+    background: rgba(255,255,255,0.08);
+
+    color: #fff;
+
+    cursor: pointer;
+
+    font-size: 17px;
+
+    transition: 0.2s;
+}
+
+
+.students-close-btn:hover {
+    background: rgba(255,255,255,0.16);
+}
+
+
+/* STATISTICS */
+
+.students-stats {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 15px;
+
+    padding: 20px 28px;
+}
+
+
+.student-stat-card {
+    display: flex;
+    align-items: center;
+
+    gap: 15px;
+
+    padding: 18px;
+
+    border-radius: 14px;
+
+    background: #1c1c1c;
+    border: 1px solid rgba(255,255,255,0.07);
+}
+
+
+.student-stat-icon {
+    width: 45px;
+    height: 45px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background: rgba(255,255,255,0.08);
+
+    font-size: 19px;
+}
+
+
+.student-stat-card span {
+    display: block;
+
+    color: #999;
+
+    font-size: 13px;
+
+    margin-bottom: 4px;
+}
+
+
+.student-stat-card strong {
+    font-size: 22px;
+}
+
+
+/* CONTROLS */
+
+.students-controls {
+    display: flex;
+
+    gap: 12px;
+
+    padding: 0 28px 20px;
+}
+
+
+.students-search {
+    flex: 1;
+
+    position: relative;
+}
+
+
+.students-search i {
+    position: absolute;
+
+    left: 15px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    color: #888;
+}
+
+
+.students-search input,
+.students-controls select {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    height: 44px;
+
+    border-radius: 10px;
+
+    border: 1px solid rgba(255,255,255,0.10);
+
+    background: #202020;
+
+    color: #fff;
+
+    outline: none;
+
+    padding: 0 14px;
+}
+
+
+.students-search input {
+    padding-left: 42px;
+}
+
+
+.students-search input:focus,
+.students-controls select:focus {
+    border-color: rgba(255,255,255,0.30);
+}
+
+
+.students-controls select {
+    width: 170px;
+}
+
+
+.students-refresh-btn {
+    height: 44px;
+
+    padding: 0 18px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: #fff;
+
+    color: #111;
+
+    cursor: pointer;
+
+    font-weight: 600;
+
+    white-space: nowrap;
+
+    transition: 0.2s;
+}
+
+
+.students-refresh-btn:hover {
+    transform: translateY(-1px);
+}
+
+
+/* LOADING */
+
+.students-loading {
+    text-align: center;
+
+    padding: 30px;
+
+    color: #aaa;
+
+    font-size: 14px;
+}
+
+
+.students-loading i {
+    margin-right: 8px;
+}
+
+
+/* TABLE */
+
+.students-table-container {
+    overflow: auto;
+
+    margin: 0 28px;
+
+    border: 1px solid rgba(255,255,255,0.08);
+
+    border-radius: 12px;
+
+    max-height: 430px;
+}
+
+
+.students-table {
+    width: 100%;
+
+    border-collapse: collapse;
+
+    min-width: 850px;
+}
+
+
+.students-table th {
+    position: sticky;
+
+    top: 0;
+
+    z-index: 2;
+
+    background: #202020;
+
+    color: #aaa;
+
+    text-align: left;
+
+    font-size: 12px;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.4px;
+
+    padding: 14px 15px;
+
+    white-space: nowrap;
+}
+
+
+.students-table td {
+    padding: 14px 15px;
+
+    border-top: 1px solid rgba(255,255,255,0.06);
+
+    font-size: 14px;
+
+    color: #ddd;
+}
+
+
+.students-table tbody tr {
+    transition: 0.15s;
+}
+
+
+.students-table tbody tr:hover {
+    background: rgba(255,255,255,0.035);
+}
+
+
+/* STUDENT NAME */
+
+.student-name-cell {
+    display: flex;
+
+    align-items: center;
+
+    gap: 11px;
+
+    min-width: 200px;
+}
+
+
+.student-avatar {
+    width: 38px;
+    height: 38px;
+
+    border-radius: 50%;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(255,255,255,0.10);
+
+    color: #fff;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    flex-shrink: 0;
+}
+
+
+.student-name-cell strong {
+    display: block;
+
+    color: #fff;
+
+    font-size: 14px;
+}
+
+
+.admin-label {
+    display: inline-block;
+
+    margin-top: 4px;
+
+    font-size: 9px;
+
+    padding: 2px 6px;
+
+    border-radius: 5px;
+
+    background: rgba(255,255,255,0.10);
+
+    color: #bbb;
+
+    letter-spacing: 0.5px;
+}
+
+
+.student-id {
+    font-family: monospace;
+
+    color: #bbb;
+}
+
+
+/* STATUS */
+
+.student-status {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    padding: 5px 9px;
+
+    border-radius: 20px;
+
+    font-size: 11px;
+
+    font-weight: 600;
+}
+
+
+.student-status.active {
+    background: rgba(80,200,120,0.12);
+
+    color: #70d99a;
+}
+
+
+.student-status.banned {
+    background: rgba(255,80,80,0.12);
+
+    color: #ff7777;
+}
+
+
+/* ACTIONS */
+
+.student-actions {
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+}
+
+
+.student-action-btn {
+    width: 34px;
+    height: 34px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    transition: 0.2s;
+}
+
+
+.student-action-btn.ban {
+    background: rgba(255,180,60,0.12);
+
+    color: #ffbd5c;
+}
+
+
+.student-action-btn.unban {
+    background: rgba(80,200,120,0.12);
+
+    color: #70d99a;
+}
+
+
+.student-action-btn.delete {
+    background: rgba(255,70,70,0.12);
+
+    color: #ff7777;
+}
+
+
+.student-action-btn:hover {
+    transform: translateY(-1px);
+
+    filter: brightness(1.25);
+}
+
+
+.protected-admin {
+    color: #999;
+
+    font-size: 11px;
+
+    white-space: nowrap;
+}
+
+
+.protected-admin i {
+    margin-right: 4px;
+}
+
+
+/* EMPTY */
+
+.students-empty {
+    text-align: center;
+
+    padding: 50px 20px;
+
+    color: #888;
+}
+
+
+.students-empty i {
+    font-size: 35px;
+
+    margin-bottom: 12px;
+}
+
+
+.students-empty h3 {
+    color: #ddd;
+
+    margin: 0 0 5px;
+}
+
+
+.students-empty p {
+    margin: 0;
+
+    font-size: 13px;
+}
+
+
+/* FOOTER */
+
+.students-modal-footer {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 18px 28px;
+
+    margin-top: 5px;
+
+    color: #888;
+
+    font-size: 13px;
+}
+
+
+.students-close-footer {
+    padding: 9px 18px;
+
+    border: 1px solid rgba(255,255,255,0.12);
+
+    background: transparent;
+
+    color: #fff;
+
+    border-radius: 9px;
+
+    cursor: pointer;
+}
+
+
+.students-close-footer:hover {
+    background: rgba(255,255,255,0.07);
+}
+
+
+/* MOBILE */
+
+@media (max-width: 700px) {
+
+    .students-modal-overlay {
+        padding: 10px;
+    }
+
+
+    .students-modal {
+        max-height: 96vh;
+
+        border-radius: 14px;
+    }
+
+
+    .students-modal-header {
+        padding: 18px;
+    }
+
+
+    .students-stats {
+        grid-template-columns: 1fr;
+
+        padding: 15px 18px;
+    }
+
+
+    .students-controls {
+        flex-direction: column;
+
+        padding: 0 18px 15px;
+    }
+
+
+    .students-controls select {
+        width: 100%;
+    }
+
+
+    .students-refresh-btn {
+        width: 100%;
+    }
+
+
+    .students-table-container {
+        margin: 0 18px;
+    }
+
+
+    .students-modal-footer {
+        padding: 15px 18px;
+    }
+
+}
   </style>
 </head>
 
@@ -1220,8 +1863,940 @@ async function uploadAdminPaper(event) {
 
 }
 
-function manageStudents() {
-  alert("Student management coming next.");
+async function manageStudents() {
+
+    // Remove old modal if already open
+    document.getElementById("studentsAdminModal")?.remove();
+
+    // Create modal
+    const modal = document.createElement("div");
+
+    modal.id = "studentsAdminModal";
+
+    modal.innerHTML = `
+        <div class="students-modal-overlay">
+
+            <div class="students-modal">
+
+                <!-- HEADER -->
+                <div class="students-modal-header">
+
+                    <div>
+                        <h2>
+                            <i class="fas fa-user-graduate"></i>
+                            Manage Students
+                        </h2>
+
+                        <p>
+                            View and manage registered Note Sphere students.
+                        </p>
+                    </div>
+
+                    <button
+                        class="students-close-btn"
+                        onclick="closeStudentsAdmin()">
+                        <i class="fas fa-times"></i>
+                    </button>
+
+                </div>
+
+
+                <!-- STATISTICS -->
+                <div class="students-stats">
+
+                    <div class="student-stat-card">
+
+                        <div class="student-stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+
+                        <div>
+                            <span>Total Students</span>
+                            <strong id="totalStudentsCount">0</strong>
+                        </div>
+
+                    </div>
+
+
+                    <div class="student-stat-card">
+
+                        <div class="student-stat-icon">
+                            <i class="fas fa-user-check"></i>
+                        </div>
+
+                        <div>
+                            <span>Active</span>
+                            <strong id="activeStudentsCount">0</strong>
+                        </div>
+
+                    </div>
+
+
+                    <div class="student-stat-card">
+
+                        <div class="student-stat-icon">
+                            <i class="fas fa-user-slash"></i>
+                        </div>
+
+                        <div>
+                            <span>Banned</span>
+                            <strong id="bannedStudentsCount">0</strong>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- CONTROLS -->
+                <div class="students-controls">
+
+                    <div class="students-search">
+
+                        <i class="fas fa-search"></i>
+
+                        <input
+                            type="text"
+                            id="studentSearchInput"
+                            placeholder="Search by name, student ID, course or year..."
+                            oninput="filterStudents()"
+                        >
+
+                    </div>
+
+
+                    <select
+                        id="studentStatusFilter"
+                        onchange="filterStudents()">
+
+                        <option value="all">All Students</option>
+                        <option value="active">Active</option>
+                        <option value="banned">Banned</option>
+
+                    </select>
+
+
+                    <button
+                        class="students-refresh-btn"
+                        onclick="loadStudents()">
+
+                        <i class="fas fa-sync-alt"></i>
+                        Refresh
+
+                    </button>
+
+                </div>
+
+
+                <!-- STATUS -->
+                <div
+                    id="studentsLoading"
+                    class="students-loading">
+
+                    <i class="fas fa-spinner fa-spin"></i>
+                    Loading students...
+
+                </div>
+
+
+                <!-- TABLE -->
+                <div class="students-table-container">
+
+                    <table class="students-table">
+
+                        <thead>
+
+                            <tr>
+                                <th>#</th>
+                                <th>Student</th>
+                                <th>Student ID</th>
+                                <th>Course</th>
+                                <th>Year</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="studentsTableBody">
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+                <!-- EMPTY STATE -->
+                <div
+                    id="studentsEmptyState"
+                    class="students-empty"
+                    style="display:none;">
+
+                    <i class="fas fa-user-graduate"></i>
+
+                    <h3>No students found</h3>
+
+                    <p>
+                        No students match your search or filter.
+                    </p>
+
+                </div>
+
+
+                <!-- FOOTER -->
+                <div class="students-modal-footer">
+
+                    <span id="studentsResultCount">
+                        0 students
+                    </span>
+
+                    <button
+                        class="students-close-footer"
+                        onclick="closeStudentsAdmin()">
+
+                        Close
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    // Load students
+    await loadStudents();
+}
+
+
+/* =========================================================
+   STUDENT DATA
+========================================================= */
+
+let allStudents = [];
+
+
+async function loadStudents() {
+
+    const loading =
+        document.getElementById("studentsLoading");
+
+    const tableBody =
+        document.getElementById("studentsTableBody");
+
+    const emptyState =
+        document.getElementById("studentsEmptyState");
+
+    if (!loading || !tableBody) {
+        return;
+    }
+
+    loading.style.display = "block";
+
+    tableBody.innerHTML = "";
+
+    if (emptyState) {
+        emptyState.style.display = "none";
+    }
+
+    try {
+
+        const {
+            data,
+            error
+        } = await noteSphereSupabase
+            .from("profiles")
+            .select(`
+                id,
+                student_id,
+                full_name,
+                year,
+                course,
+                role,
+                status
+            `)
+            .order("full_name", {
+                ascending: true
+            });
+
+
+        if (error) {
+            throw error;
+        }
+
+
+        allStudents = data || [];
+
+        updateStudentStatistics();
+
+        filterStudents();
+
+
+    } catch (error) {
+
+        console.error(
+            "Student loading error:",
+            error
+        );
+
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="7"
+                    style="
+                        text-align:center;
+                        padding:30px;
+                        color:#ff6b6b;
+                    ">
+
+                    <i class="fas fa-exclamation-triangle"></i>
+
+                    <br><br>
+
+                    Failed to load students.
+
+                    <br>
+
+                    <small>
+                        ${escapeStudentHTML(error.message)}
+                    </small>
+
+                </td>
+            </tr>
+        `;
+
+    } finally {
+
+        loading.style.display = "none";
+
+    }
+}
+
+
+/* =========================================================
+   FILTER STUDENTS
+========================================================= */
+
+function filterStudents() {
+
+    const searchInput =
+        document.getElementById("studentSearchInput");
+
+    const statusFilter =
+        document.getElementById("studentStatusFilter");
+
+    if (!searchInput || !statusFilter) {
+        return;
+    }
+
+
+    const search =
+        searchInput.value
+            .trim()
+            .toLowerCase();
+
+
+    const status =
+        statusFilter.value;
+
+
+    const filtered =
+        allStudents.filter(student => {
+
+            const name =
+                String(student.full_name || "")
+                    .toLowerCase();
+
+            const studentId =
+                String(student.student_id || "")
+                    .toLowerCase();
+
+            const course =
+                String(student.course || "")
+                    .toLowerCase();
+
+            const year =
+                String(student.year || "")
+                    .toLowerCase();
+
+            const studentStatus =
+                String(student.status || "active")
+                    .toLowerCase();
+
+
+            const matchesSearch =
+                !search ||
+                name.includes(search) ||
+                studentId.includes(search) ||
+                course.includes(search) ||
+                year.includes(search);
+
+
+            const matchesStatus =
+                status === "all" ||
+                studentStatus === status;
+
+
+            return matchesSearch && matchesStatus;
+
+        });
+
+
+    renderStudents(filtered);
+}
+
+
+/* =========================================================
+   RENDER STUDENTS
+========================================================= */
+
+function renderStudents(students) {
+
+    const tableBody =
+        document.getElementById("studentsTableBody");
+
+    const emptyState =
+        document.getElementById("studentsEmptyState");
+
+    const resultCount =
+        document.getElementById("studentsResultCount");
+
+
+    if (!tableBody) {
+        return;
+    }
+
+
+    tableBody.innerHTML = "";
+
+
+    if (resultCount) {
+
+        resultCount.textContent =
+            `${students.length} student${students.length === 1 ? "" : "s"}`;
+
+    }
+
+
+    if (students.length === 0) {
+
+        if (emptyState) {
+            emptyState.style.display = "block";
+        }
+
+        return;
+    }
+
+
+    if (emptyState) {
+        emptyState.style.display = "none";
+    }
+
+
+    students.forEach((student, index) => {
+
+        const status =
+            student.status || "active";
+
+        const isAdmin =
+            student.role === "admin";
+
+        const isBanned =
+            status === "banned";
+
+
+        const row =
+            document.createElement("tr");
+
+
+        row.innerHTML = `
+
+            <td>
+                ${index + 1}
+            </td>
+
+
+            <td>
+
+                <div class="student-name-cell">
+
+                    <div class="student-avatar">
+                        ${getStudentInitials(student.full_name)}
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            ${escapeStudentHTML(
+                                student.full_name || "Unknown"
+                            )}
+                        </strong>
+
+                        ${
+                            isAdmin
+                                ? `
+                                    <span class="admin-label">
+                                        ADMIN
+                                    </span>
+                                  `
+                                : ""
+                        }
+
+                    </div>
+
+                </div>
+
+            </td>
+
+
+            <td>
+                <span class="student-id">
+                    ${escapeStudentHTML(
+                        student.student_id || "N/A"
+                    )}
+                </span>
+            </td>
+
+
+            <td>
+                ${escapeStudentHTML(
+                    student.course || "N/A"
+                )}
+            </td>
+
+
+            <td>
+                ${escapeStudentHTML(
+                    student.year || "N/A"
+                )}
+            </td>
+
+
+            <td>
+
+                <span class="
+                    student-status
+                    ${isBanned ? "banned" : "active"}
+                ">
+
+                    <i class="
+                        fas
+                        ${isBanned
+                            ? "fa-ban"
+                            : "fa-check-circle"
+                        }
+                    "></i>
+
+                    ${isBanned ? "Banned" : "Active"}
+
+                </span>
+
+            </td>
+
+
+            <td>
+
+                <div class="student-actions">
+
+                    ${
+                        isAdmin
+
+                        ? `
+                            <span class="protected-admin">
+                                <i class="fas fa-shield-alt"></i>
+                                Protected
+                            </span>
+                          `
+
+                        : `
+
+                            ${
+                                isBanned
+
+                                ? `
+                                    <button
+                                        class="student-action-btn unban"
+                                        onclick="unbanStudent('${student.id}')"
+                                        title="Unban student">
+
+                                        <i class="fas fa-user-check"></i>
+
+                                    </button>
+                                  `
+
+                                : `
+                                    <button
+                                        class="student-action-btn ban"
+                                        onclick="banStudent('${student.id}')"
+                                        title="Ban student">
+
+                                        <i class="fas fa-ban"></i>
+
+                                    </button>
+                                  `
+                            }
+
+
+                            <button
+                                class="student-action-btn delete"
+                                onclick="deleteStudent('${student.id}')"
+                                title="Delete student">
+
+                                <i class="fas fa-trash"></i>
+
+                            </button>
+
+                          `
+                    }
+
+                </div>
+
+            </td>
+
+        `;
+
+
+        tableBody.appendChild(row);
+
+    });
+}
+
+
+/* =========================================================
+   STATISTICS
+========================================================= */
+
+function updateStudentStatistics() {
+
+    const total =
+        allStudents.length;
+
+
+    const active =
+        allStudents.filter(student =>
+            (student.status || "active") === "active"
+        ).length;
+
+
+    const banned =
+        allStudents.filter(student =>
+            student.status === "banned"
+        ).length;
+
+
+    const totalElement =
+        document.getElementById("totalStudentsCount");
+
+    const activeElement =
+        document.getElementById("activeStudentsCount");
+
+    const bannedElement =
+        document.getElementById("bannedStudentsCount");
+
+
+    if (totalElement) {
+        totalElement.textContent = total;
+    }
+
+    if (activeElement) {
+        activeElement.textContent = active;
+    }
+
+    if (bannedElement) {
+        bannedElement.textContent = banned;
+    }
+}
+
+
+/* =========================================================
+   BAN STUDENT
+========================================================= */
+
+async function banStudent(studentId) {
+
+    const student =
+        allStudents.find(
+            item => item.id === studentId
+        );
+
+
+    if (!student) {
+        alert("Student not found.");
+        return;
+    }
+
+
+    if (student.role === "admin") {
+
+        alert(
+            "Admin accounts cannot be banned from the student panel."
+        );
+
+        return;
+    }
+
+
+    const confirmed =
+        confirm(
+            `Are you sure you want to ban ${student.full_name}?`
+        );
+
+
+    if (!confirmed) {
+        return;
+    }
+
+
+    try {
+
+        const {
+            error
+        } = await noteSphereSupabase
+            .from("profiles")
+            .update({
+                status: "banned"
+            })
+            .eq("id", studentId);
+
+
+        if (error) {
+            throw error;
+        }
+
+
+        alert(
+            `${student.full_name} has been banned.`
+        );
+
+
+        await loadStudents();
+
+
+    } catch (error) {
+
+        console.error(
+            "Ban student error:",
+            error
+        );
+
+        alert(
+            "Failed to ban student:\n" +
+            error.message
+        );
+
+    }
+}
+
+
+/* =========================================================
+   UNBAN STUDENT
+========================================================= */
+
+async function unbanStudent(studentId) {
+
+    const student =
+        allStudents.find(
+            item => item.id === studentId
+        );
+
+
+    if (!student) {
+        alert("Student not found.");
+        return;
+    }
+
+
+    const confirmed =
+        confirm(
+            `Unban ${student.full_name}?`
+        );
+
+
+    if (!confirmed) {
+        return;
+    }
+
+
+    try {
+
+        const {
+            error
+        } = await noteSphereSupabase
+            .from("profiles")
+            .update({
+                status: "active"
+            })
+            .eq("id", studentId);
+
+
+        if (error) {
+            throw error;
+        }
+
+
+        alert(
+            `${student.full_name} has been unbanned.`
+        );
+
+
+        await loadStudents();
+
+
+    } catch (error) {
+
+        console.error(
+            "Unban student error:",
+            error
+        );
+
+        alert(
+            "Failed to unban student:\n" +
+            error.message
+        );
+
+    }
+}
+
+
+/* =========================================================
+   DELETE STUDENT PROFILE
+========================================================= */
+
+async function deleteStudent(studentId) {
+
+    const student =
+        allStudents.find(
+            item => item.id === studentId
+        );
+
+
+    if (!student) {
+        alert("Student not found.");
+        return;
+    }
+
+
+    if (student.role === "admin") {
+
+        alert(
+            "Admin accounts cannot be deleted from the student panel."
+        );
+
+        return;
+    }
+
+
+    const confirmed =
+        confirm(
+            `DELETE ${student.full_name}?\n\n` +
+            `Student ID: ${student.student_id}\n\n` +
+            `This will permanently delete the student's profile record.`
+        );
+
+
+    if (!confirmed) {
+        return;
+    }
+
+
+    try {
+
+        const {
+            error
+        } = await noteSphereSupabase
+            .from("profiles")
+            .delete()
+            .eq("id", studentId);
+
+
+        if (error) {
+            throw error;
+        }
+
+
+        alert(
+            `${student.full_name}'s profile has been deleted.`
+        );
+
+
+        await loadStudents();
+
+
+    } catch (error) {
+
+        console.error(
+            "Delete student error:",
+            error
+        );
+
+        alert(
+            "Failed to delete student:\n" +
+            error.message
+        );
+
+    }
+}
+
+
+/* =========================================================
+   CLOSE MODAL
+========================================================= */
+
+function closeStudentsAdmin() {
+
+    document
+        .getElementById("studentsAdminModal")
+        ?.remove();
+
+}
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function getStudentInitials(name) {
+
+    if (!name) {
+        return "S";
+    }
+
+
+    const parts =
+        name
+            .trim()
+            .split(/\s+/)
+            .filter(Boolean);
+
+
+    if (parts.length === 1) {
+
+        return parts[0]
+            .substring(0, 2)
+            .toUpperCase();
+
+    }
+
+
+    return (
+        parts[0][0] +
+        parts[parts.length - 1][0]
+    ).toUpperCase();
+}
+
+
+function escapeStudentHTML(value) {
+
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
 }
 
 
